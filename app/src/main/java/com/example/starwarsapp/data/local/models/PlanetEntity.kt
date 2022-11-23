@@ -4,15 +4,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Specie(
+data class PlanetEntity(
     @PrimaryKey
     val id: Int,
     val name: String,
     val description: String,
     val image: String,
-    val language: String,
-    val planet: String,
-    val classification: String,
+    val region: String,
+    val system: String,
     val createdAt: Long,
     val updatedAt: Long
 )

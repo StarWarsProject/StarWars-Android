@@ -2,8 +2,8 @@ package com.example.starwarsapp.data.local.models
 
 import androidx.room.Entity
 
-@Entity(primaryKeys = ["movieId", "planetId"])
-data class MoviePlanets(
+@Entity(primaryKeys = ["movieId", "vehicleId"])
+data class MovieVehiclesEntity(
     val movieId: Int,
-    val planetId: Int
+    val vehicleId: Int
 )
