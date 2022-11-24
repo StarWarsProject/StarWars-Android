@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">StarWarsApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="error_connection_title">Connection Error</string>
+    <string name="error_connection_message">Error you need a internet connection to use the App</string>
+    <string name="ok">OK</string>
 </resources>
