@@ -1,4 +1,4 @@
-package com.example.starwarsapp.ui.home
+package com.example.starwarsapp.ui.home.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.starwarsapp.R
 
-class MoviePreviewFragment : Fragment() {
+class MainScreenFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -16,8 +16,8 @@ class MoviePreviewFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie_preview, container, false)
+        return inflater.inflate(R.layout.fragment_main_screen, container, false)
     }
 }
