@@ -8,4 +8,8 @@ class MovieLocalManager(private val localStarWarsDB: StarWarsDB) : MovieLocalRep
     override fun addLocalMovies(movieEntity: MovieEntity) {
         localStarWarsDB.movieDao().addMovie(movieEntity)
     }
+
+    override fun getLocalMovies(): List<MovieEntity> {
+        return localStarWarsDB.movieDao().getAllMovies()
+    }
 }

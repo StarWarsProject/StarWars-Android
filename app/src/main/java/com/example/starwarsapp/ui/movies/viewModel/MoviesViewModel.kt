@@ -1,5 +1,7 @@
 package com.example.starwarsapp.ui.movies.viewModel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.starwarsapp.data.local.interfaces.MovieLocalRepository
@@ -15,11 +17,19 @@ import javax.inject.Inject
 class MoviesViewModel
 @Inject
 constructor(private val swapiRepository: SwapiRepository, private val movieLocalRepository: MovieLocalRepository) : ViewModel() {
+
+    var _moviesList: MutableLiveData<List<MovieEntity>> = MutableLiveData()
+    val moviesList: LiveData<List<MovieEntity>> = _moviesList
+
     fun getAllMovies() = viewModelScope.launch {
         val moviesResponse = swapiRepository.getAllMovies()
         if (moviesResponse.data != null) {
             saveMoviesLocally(moviesResponse.data)
         }
+    }
+
+    fun getAllMoviesLocally() = viewModelScope.launch {
+        _moviesList.value = movieLocalRepository.getLocalMovies()
     }
 
     fun saveMoviesLocally(movies: List<Movie>) = viewModelScope.launch {
