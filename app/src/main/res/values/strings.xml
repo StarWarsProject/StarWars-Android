@@ -6,4 +6,8 @@
     <string name="error_connection_title">Connection Error</string>
     <string name="error_connection_message">Error you need a internet connection to use the App</string>
     <string name="ok">OK</string>
+
+    <!--Filters-->
+    <string name="filter_by_date">By Release Date</string>
+    <string name="filter_by_history">By Movie History</string>
 </resources>

@@ -20,6 +20,7 @@ constructor(private val swapiRepository: SwapiRepository, private val movieLocal
 
     var _moviesList: MutableLiveData<List<MovieEntity>> = MutableLiveData()
     val moviesList: LiveData<List<MovieEntity>> = _moviesList
+    var originalList: List<MovieEntity> = listOf()
     val activeMovie: MutableLiveData<MovieEntity> = MutableLiveData()
 
     fun getAllMovies() = viewModelScope.launch {
@@ -32,6 +33,21 @@ constructor(private val swapiRepository: SwapiRepository, private val movieLocal
     fun getAllMoviesLocally() = viewModelScope.launch {
         _moviesList.value = movieLocalRepository.getLocalMovies()
         activeMovie.value = moviesList.value?.first()
+        originalList = _moviesList.value ?: listOf()
+    }
+
+    fun filterByReleaseDate() {
+        val newList = mutableListOf<MovieEntity>()
+        newList.addAll(_moviesList.value ?: listOf())
+        newList.sortBy { it.releaseDate }
+        _moviesList.value = newList
+    }
+
+    fun filterByHistory() {
+        val newList = mutableListOf<MovieEntity>()
+        newList.addAll(_moviesList.value ?: listOf())
+        newList.sortBy { it.id }
+        _moviesList.value = newList
     }
 
     fun saveMoviesLocally(movies: List<Movie>) = viewModelScope.launch {
