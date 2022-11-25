@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/moviesFragment">
-
+    app:startDestination="@id/mainScreenFragment">
     <fragment
-        android:id="@+id/moviesFragment"
-        android:name="com.example.starwarsapp.ui.movies.view.MoviesFragment"
-        android:label="fragment_movies"
-        tools:layout="@layout/fragment_movies" />
+        android:id="@+id/mainScreenFragment"
+        android:name="com.example.starwarsapp.ui.home.view.MainScreenFragment"
+        android:label="fragment_main_screen"
+        tools:layout="@layout/fragment_main_screen" />
 </navigation>
