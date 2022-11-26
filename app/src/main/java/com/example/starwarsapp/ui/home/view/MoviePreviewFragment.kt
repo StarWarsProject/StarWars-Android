@@ -7,9 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.starwarsapp.databinding.FragmentMoviePreviewBinding
 import com.example.starwarsapp.ui.home.viewModel.MoviesListViewModel
+import com.example.starwarsapp.utils.DrawableManager
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MoviePreviewFragment : Fragment() {
@@ -17,9 +20,8 @@ class MoviePreviewFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MoviesListViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    @Inject
+    lateinit var drawableManager: DrawableManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,12 +35,25 @@ class MoviePreviewFragment : Fragment() {
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.errorContainer.visibility = View.GONE
         viewModel.activeMovie.observe(viewLifecycleOwner) {
             binding.movieItem = it
-            val uri = "@drawable/${it.title.lowercase().split(" ").joinToString("_")}"
-            val imageResource = resources.getIdentifier(uri, null, requireContext().packageName)
-            val imageDrawable = requireContext().getDrawable(imageResource)
-            binding.ivMoviePoster.setImageDrawable(imageDrawable)
+            if (it == null) {
+                binding.errorContainer.visibility = View.VISIBLE
+                binding.headerContainer.visibility = View.GONE
+                binding.previewContainer.visibility = View.GONE
+            } else {
+                binding.errorContainer.visibility = View.GONE
+                binding.headerContainer.visibility = View.VISIBLE
+                binding.previewContainer.visibility = View.VISIBLE
+                val imageDrawable = drawableManager.getDrawable(it.title)
+                binding.ivMoviePoster.setImageDrawable(imageDrawable)
+            }
+        }
+        binding.btnGoDetails.setOnClickListener {
+            val targetMovie = viewModel.activeMovie.value ?: return@setOnClickListener
+            val direction = MainScreenFragmentDirections.actionMainScreenFragmentToMovieDetailFragment(targetMovie)
+            findNavController().navigate(direction)
         }
     }
 }
