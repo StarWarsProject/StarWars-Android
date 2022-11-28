@@ -14,4 +14,4 @@ data class MovieEntity(
     val releaseDate: String,
     val createdAt: Long,
     val updatedAt: Long
-)
+) : java.io.Serializable

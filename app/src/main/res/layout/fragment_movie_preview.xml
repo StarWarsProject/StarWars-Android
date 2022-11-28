@@ -13,7 +13,6 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardCornerRadius="15dp"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +21,29 @@
             android:background="@color/black1"
             android:padding="10dp"
             tools:context=".ui.home.view.MoviePreviewFragment">
+
+            <LinearLayout
+                android:id="@+id/errorContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_baseline_error_24" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/we_can_t_show_you_any_information_yet_ensure_you_have_internet_connection_and_restart_the_app"
+                    android:textAlignment="center"
+                    />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/headerContainer"
@@ -36,7 +58,6 @@
                     android:layout_height="wrap_content"
                     android:text="@{movieItem.title}"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     tools:text="star wars movie" />
@@ -45,13 +66,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@{movieItem.releaseDate}"
-                    android:textColor="@color/white"
                     android:textAlignment="center"
                     tools:text="1985"
                     />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/previewContainer"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintTop_toBottomOf="@id/headerContainer"
@@ -88,11 +109,12 @@
                         android:maxLines="12"/>
 
                     <Button
+                        android:id="@+id/btn_goDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/btnPrimaryRounded"
                         android:backgroundTint="@color/white"
-                        android:text="See Details"
+                        android:text="@string/see_details"
                         android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"

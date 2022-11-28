@@ -8,5 +8,18 @@
         android:id="@+id/mainScreenFragment"
         android:name="com.example.starwarsapp.ui.home.view.MainScreenFragment"
         android:label="fragment_main_screen"
-        tools:layout="@layout/fragment_main_screen" />
+        tools:layout="@layout/fragment_main_screen" >
+        <action
+            android:id="@+id/action_mainScreenFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="com.example.starwarsapp.ui.movieDetail.view.MovieDetailFragment"
+        android:label="fragment_movie_detail"
+        tools:layout="@layout/fragment_movie_detail" >
+        <argument
+            android:name="movie"
+            app:argType="com.example.starwarsapp.data.local.models.MovieEntity" />
+    </fragment>
 </navigation>
