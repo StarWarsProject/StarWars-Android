@@ -27,7 +27,7 @@ data class Movie(
     val edited: String,
     val url: String
 ) {
-    fun toEntity() : MovieEntity {
+    fun toEntity(): MovieEntity {
         val charactersStr = ListUtil.urlListToJoinedIdString(characters)
         val planetsStr = ListUtil.urlListToJoinedIdString(planets)
         val starshipsStr = ListUtil.urlListToJoinedIdString(starships)

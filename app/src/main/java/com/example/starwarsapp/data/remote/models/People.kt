@@ -1,6 +1,6 @@
 package com.example.starwarsapp.data.remote.models
 
-data class People (
+data class People(
     val birthYear: String = "",
     val eyeColor: String = "",
     val films: List<String> = listOf(),
