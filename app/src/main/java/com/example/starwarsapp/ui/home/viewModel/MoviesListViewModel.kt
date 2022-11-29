@@ -10,7 +10,6 @@ import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
 import com.example.starwarsapp.data.remote.models.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,8 +39,7 @@ constructor(private val swapiRepository: SwapiRepository, private val movieLocal
 
     fun saveMoviesLocally(movies: List<Movie>) = viewModelScope.launch {
         for (item in movies) {
-            val movie = MovieEntity(item.episode_id, item.title, item.opening_crawl, item.director, item.producer, item.release_date, Date().time, Date().time)
-            movieLocalRepository.addLocalMovies(movie)
+            movieLocalRepository.addLocalMovies(item.toEntity())
         }
     }
 
