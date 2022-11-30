@@ -3,14 +3,11 @@ package com.example.starwarsapp.ui.home.view
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AlertDialog
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.starwarsapp.R
 import com.example.starwarsapp.data.local.models.MovieEntity
@@ -41,31 +38,9 @@ class MoviesListFragment : Fragment(), MovieAdapter.IMovieListener {
         binding.moviesRecycler.adapter = MovieAdapter(mutableListOf(), this)
         binding.errorContainer.visibility = View.GONE
 
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(
-            object : MenuProvider {
-
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.menu_filter, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    return when (menuItem.itemId) {
-                        R.id.filter_by_release_date -> {
-                            viewModel.filterByReleaseDate()
-                            true
-                        }
-                        R.id.filter_by_movie_history -> {
-                            viewModel.filterByHistory()
-                            true
-                        }
-                        else -> false
-                    }
-                }
-            },
-            viewLifecycleOwner,
-            Lifecycle.State.RESUMED
-        )
+        binding.ibFilter.setOnClickListener {
+            showPopup(it)
+        }
 
         viewModel.moviesList.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
@@ -80,6 +55,24 @@ class MoviesListFragment : Fragment(), MovieAdapter.IMovieListener {
             viewModel.getAllMovies()
         }
         viewModel.getAllMoviesLocally()
+    }
+
+    private fun showPopup(v: View) {
+        val popup = PopupMenu(requireContext(), v, Gravity.END)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.menu_filter, popup.menu)
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.filter_by_release_date -> {
+                    viewModel.filterByReleaseDate()
+                }
+                R.id.filter_by_movie_history -> {
+                    viewModel.filterByHistory()
+                }
+            }
+            true
+        }
+        popup.show()
     }
 
     override fun onMovieTap(movie: MovieEntity) {
