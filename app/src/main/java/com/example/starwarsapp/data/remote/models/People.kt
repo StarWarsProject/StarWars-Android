@@ -1,5 +1,8 @@
 package com.example.starwarsapp.data.remote.models
 
+import com.example.starwarsapp.data.local.models.CharacterEntity
+import java.util.Date
+
 data class People(
     val birthYear: String = "",
     val eyeColor: String = "",
@@ -17,4 +20,8 @@ data class People(
     val starships: List<String> = listOf(),
     val url: String = "",
     val vehicles: List<String> = listOf()
-)
+) {
+    fun toEntity(id: Int): CharacterEntity {
+        return CharacterEntity(id, name, birthYear, "", gender, height, "", homeworld, "", Date().time, Date().time)
+    }
+}

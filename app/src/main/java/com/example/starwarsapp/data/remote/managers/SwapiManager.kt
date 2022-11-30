@@ -1,5 +1,6 @@
 package com.example.starwarsapp.data.remote.managers
 
+import android.util.Log
 import com.example.starwarsapp.data.remote.api.Swapi
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
 import com.example.starwarsapp.data.remote.models.Movie
@@ -13,8 +14,10 @@ class SwapiManager(private val service: Swapi) : SwapiRepository {
             if (response.isSuccessful) {
                 return Response.Success(response.body()?.results ?: listOf())
             }
+            Log.e(Response.LOG_ERROR_TAG, response.message())
             return Response.Error(response.message())
         } catch (e: Exception) {
+            Log.e(Response.LOG_ERROR_TAG, e.message.toString())
             return Response.Error(e.toString())
         }
     }
@@ -26,11 +29,13 @@ class SwapiManager(private val service: Swapi) : SwapiRepository {
                 if (response.isSuccessful) {
                     return@map response.body() ?: People()
                 } else {
+                    Log.e(Response.LOG_ERROR_TAG, response.message())
                     return Response.Error(response.message())
                 }
             }
             return Response.Success(data)
         } catch (e: Exception) {
+            Log.e(Response.LOG_ERROR_TAG, e.message.toString())
             return Response.Error(e.toString())
         }
     }

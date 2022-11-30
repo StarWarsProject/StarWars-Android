@@ -11,7 +11,6 @@ import com.example.starwarsapp.data.local.models.MovieEntity
 import com.example.starwarsapp.databinding.FragmentMoviesListBinding
 import com.example.starwarsapp.ui.home.adapters.MovieAdapter
 import com.example.starwarsapp.ui.home.viewModel.MoviesListViewModel
-import com.example.starwarsapp.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,10 +43,7 @@ class MoviesListFragment : Fragment(), MovieAdapter.IMovieListener {
             }
         }
 
-        if (Utils.checkForInternet(binding.root.context)) {
-            viewModel.getAllMovies()
-        }
-        viewModel.getAllMoviesLocally()
+        viewModel.getAllMovies(binding.root.context)
     }
 
     override fun onMovieTap(movie: MovieEntity) {

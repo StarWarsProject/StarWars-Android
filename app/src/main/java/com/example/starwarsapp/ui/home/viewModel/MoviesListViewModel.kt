@@ -1,46 +1,38 @@
 package com.example.starwarsapp.ui.home.viewModel
 
-import androidx.lifecycle.LiveData
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.starwarsapp.data.local.interfaces.MovieLocalRepository
+import com.example.starwarsapp.data.local.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.models.MovieEntity
-import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
-import com.example.starwarsapp.data.remote.models.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MoviesListViewModel
 @Inject
-constructor(private val swapiRepository: SwapiRepository, private val movieLocalRepository: MovieLocalRepository) : ViewModel() {
+constructor(private val repository: MovieDataRepository) : ViewModel() {
 
-    var _moviesList: MutableLiveData<List<MovieEntity>> = MutableLiveData()
-    val moviesList: LiveData<List<MovieEntity>> = _moviesList
+    val moviesList: MutableLiveData<List<MovieEntity>> by lazy {
+        MutableLiveData<List<MovieEntity>>(listOf())
+    }
     val activeMovie: MutableLiveData<MovieEntity?> = MutableLiveData()
 
-    fun getAllMovies() = viewModelScope.launch {
-        val moviesResponse = swapiRepository.getAllMovies()
-        if (moviesResponse.data != null) {
-            saveMoviesLocally(moviesResponse.data)
+    fun getAllMovies(context: Context) = viewModelScope.launch {
+        val moviesResponse = repository.getAllMovies(context)
+        val data = moviesResponse.data
+        if (data != null) {
+            moviesList.value = data
+            activeMovie.value = data.first()
+            saveMoviesLocally(data)
         }
     }
 
-    fun getAllMoviesLocally() = viewModelScope.launch {
-        _moviesList.value = movieLocalRepository.getLocalMovies()
-        if (moviesList.value?.isNotEmpty() == true) {
-            activeMovie.value = moviesList.value!!.first()
-        } else {
-            activeMovie.value = null
-        }
-    }
-
-    fun saveMoviesLocally(movies: List<Movie>) = viewModelScope.launch {
-        for (item in movies) {
-            movieLocalRepository.addLocalMovies(item.toEntity())
-        }
+    private fun saveMoviesLocally(movies: List<MovieEntity>) = viewModelScope.launch(Dispatchers.IO) {
+        repository.storeAllMovies(movies)
     }
 
     fun updateActiveMovie(movie: MovieEntity) {
