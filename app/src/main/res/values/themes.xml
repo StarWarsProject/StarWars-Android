@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.StarWarsApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryVariant">@color/black2</item>
+        <item name="colorPrimary">@color/black2</item>
+        <item name="colorPrimaryVariant">@color/black1</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:textColor">#fff</item>
     </style>
 
     <!-- Rounded Button. -->
@@ -27,4 +28,9 @@
         <item name="cornerSizeTopRight">50%</item>
         <item name="cornerSizeBottomRight">50%</item>
     </style>
+
+    <style name="MineCustomTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">11sp</item>
+    </style>
+
 </resources>

@@ -25,7 +25,6 @@
         android:name="com.example.starwarsapp.ui.home.view.MoviePreviewFragment"
         tools:layout="@layout/fragment_movie_preview"
         android:layout_weight="1.5"
-        android:layout_marginHorizontal="10dp"
         />
 
     <androidx.fragment.app.FragmentContainerView

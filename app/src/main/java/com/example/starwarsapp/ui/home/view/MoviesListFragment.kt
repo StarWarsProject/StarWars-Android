@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +39,7 @@ class MoviesListFragment : Fragment(), MovieAdapter.IMovieListener {
         super.onViewCreated(view, savedInstanceState)
         binding.moviesRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.moviesRecycler.adapter = MovieAdapter(mutableListOf(), this)
+        binding.errorContainer.visibility = View.GONE
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(
@@ -65,13 +69,9 @@ class MoviesListFragment : Fragment(), MovieAdapter.IMovieListener {
 
         viewModel.moviesList.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
-                val builder = AlertDialog.Builder(binding.root.context)
-                builder.setTitle(R.string.error_connection_title)
-                builder.setMessage(R.string.error_connection_message)
-                builder.setPositiveButton(R.string.ok) { _, _ ->
-                }
-                builder.show()
+                binding.errorContainer.visibility = View.VISIBLE
             } else {
+                binding.errorContainer.visibility = View.GONE
                 (binding.moviesRecycler.adapter as MovieAdapter).updateList(it.toMutableList())
             }
         }
