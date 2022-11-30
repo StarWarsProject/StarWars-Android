@@ -13,6 +13,8 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:textColor">#fff</item>
+        <!-- Popup Menu Style -->
+        <item name="popupMenuStyle">@style/MyPopup</item>
     </style>
 
     <!-- Rounded Button. -->
@@ -31,6 +33,10 @@
 
     <style name="MineCustomTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="MyPopup" parent="@style/Widget.MaterialComponents.PopupMenu">
+        <item name="android:popupBackground">@color/black2</item>
     </style>
 
 </resources>

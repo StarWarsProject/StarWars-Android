@@ -7,6 +7,9 @@
     <string name="error_connection_title">Error de conexion</string>
     <string name="error_connection_message">Error, necesitas internet para usar la App</string>
     <string name="ok">OK</string>
+
+    <string name="filter_by_date">Por fecha de Lanzamiento</string>
+    <string name="filter_by_history">Por la Historia de las Peliculas</string>
     <string name="see_details">Ver Detalles</string>
     <string name="release_date">Fecha de Estreno:&#160;</string>
     <string name="director">Director:&#160;</string>
@@ -15,6 +18,7 @@
     <string name="planets">Planetas</string>
     <string name="species">Especies</string>
     <string name="ships">Naves</string>
+    <string name="films">Peliculas</string>
     <string name="we_can_t_show_you_any_information_yet_ensure_you_have_internet_connection_and_restart_the_app">No podemos mostrar ninguna informacion, asegurate que tienes conexion a internet y luego reinicia la app</string>
     <string name="ops_we_can_t_get_the_list_of_movies_right_now">Ops. No podemos obtener la lista de peliculas en este momento</string>
 </resources>

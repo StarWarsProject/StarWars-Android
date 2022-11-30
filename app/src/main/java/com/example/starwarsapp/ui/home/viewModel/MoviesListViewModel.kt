@@ -38,6 +38,20 @@ constructor(private val swapiRepository: SwapiRepository, private val movieLocal
         }
     }
 
+    fun filterByReleaseDate() {
+        val newList = mutableListOf<MovieEntity>()
+        newList.addAll(_moviesList.value ?: listOf())
+        newList.sortBy { it.releaseDate }
+        _moviesList.value = newList
+    }
+
+    fun filterByHistory() {
+        val newList = mutableListOf<MovieEntity>()
+        newList.addAll(_moviesList.value ?: listOf())
+        newList.sortBy { it.id }
+        _moviesList.value = newList
+    }
+
     fun saveMoviesLocally(movies: List<Movie>) = viewModelScope.launch {
         for (item in movies) {
             val movie = MovieEntity(item.episode_id, item.title, item.opening_crawl, item.director, item.producer, item.release_date, Date().time, Date().time)

@@ -6,6 +6,10 @@
     <string name="error_connection_title">Connection Error</string>
     <string name="error_connection_message">Error you need a internet connection to use the App</string>
     <string name="ok">OK</string>
+
+    <!--Filters-->
+    <string name="filter_by_date">By Release Date</string>
+    <string name="filter_by_history">By Movie History</string>
     <string name="see_details">See Details</string>
     <string name="release_date">Release Date:&#160;</string>
     <string name="director">Director:&#160;</string>
@@ -14,6 +18,7 @@
     <string name="planets">Planets</string>
     <string name="species">Species</string>
     <string name="ships">Ships</string>
+    <string name="films">Films</string>
     <string name="we_can_t_show_you_any_information_yet_ensure_you_have_internet_connection_and_restart_the_app">We can\'t show you any information yet, ensure you have internet connection and restart the app</string>
     <string name="ops_we_can_t_get_the_list_of_movies_right_now">Ops. We can\'t get the list of movies right now</string>
 </resources>
