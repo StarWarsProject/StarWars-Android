@@ -1,12 +1,15 @@
 package com.example.starwarsapp.ui.home.view
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.starwarsapp.R
 import com.example.starwarsapp.data.local.models.MovieEntity
 import com.example.starwarsapp.databinding.FragmentMoviesListBinding
 import com.example.starwarsapp.ui.home.adapters.MovieAdapter
@@ -34,6 +37,10 @@ class MoviesListFragment : Fragment(), MovieAdapter.IMovieListener {
         binding.moviesRecycler.adapter = MovieAdapter(mutableListOf(), this)
         binding.errorContainer.container.visibility = View.GONE
 
+        binding.ibFilter.setOnClickListener {
+            showPopup(it)
+        }
+
         viewModel.moviesList.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.errorContainer.container.visibility = View.VISIBLE
@@ -44,6 +51,24 @@ class MoviesListFragment : Fragment(), MovieAdapter.IMovieListener {
         }
 
         viewModel.getAllMovies(binding.root.context)
+    }
+
+    private fun showPopup(v: View) {
+        val popup = PopupMenu(requireContext(), v, Gravity.END)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.menu_filter, popup.menu)
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.filter_by_release_date -> {
+                    viewModel.filterByReleaseDate()
+                }
+                R.id.filter_by_movie_history -> {
+                    viewModel.filterByHistory()
+                }
+            }
+            true
+        }
+        popup.show()
     }
 
     override fun onMovieTap(movie: MovieEntity) {

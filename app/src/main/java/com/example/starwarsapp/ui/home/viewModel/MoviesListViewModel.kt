@@ -1,6 +1,7 @@
 package com.example.starwarsapp.ui.home.viewModel
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,16 +17,15 @@ class MoviesListViewModel
 @Inject
 constructor(private val repository: MovieDataRepository) : ViewModel() {
 
-    val moviesList: MutableLiveData<List<MovieEntity>> by lazy {
-        MutableLiveData<List<MovieEntity>>(listOf())
-    }
+    var _moviesList: MutableLiveData<List<MovieEntity>> = MutableLiveData()
+    val moviesList: LiveData<List<MovieEntity>> = _moviesList
     val activeMovie: MutableLiveData<MovieEntity?> = MutableLiveData()
 
     fun getAllMovies(context: Context) = viewModelScope.launch {
         val moviesResponse = repository.getAllMovies(context)
         val data = moviesResponse.data
         if (data != null) {
-            moviesList.value = data
+            _moviesList.value = data
             activeMovie.value = data.first()
             saveMoviesLocally(data)
         }
@@ -33,6 +33,20 @@ constructor(private val repository: MovieDataRepository) : ViewModel() {
 
     private fun saveMoviesLocally(movies: List<MovieEntity>) = viewModelScope.launch(Dispatchers.IO) {
         repository.storeAllMovies(movies)
+    }
+
+    fun filterByReleaseDate() {
+        val newList = mutableListOf<MovieEntity>()
+        newList.addAll(_moviesList.value ?: listOf())
+        newList.sortBy { it.releaseDate }
+        _moviesList.value = newList
+    }
+
+    fun filterByHistory() {
+        val newList = mutableListOf<MovieEntity>()
+        newList.addAll(_moviesList.value ?: listOf())
+        newList.sortBy { it.id }
+        _moviesList.value = newList
     }
 
     fun updateActiveMovie(movie: MovieEntity) {
