@@ -6,5 +6,5 @@ import com.example.starwarsapp.utils.Response
 
 interface SwapiRepository {
     suspend fun getAllMovies(): Response<List<Movie>>
-    suspend fun getCharactersForMovie(charaterUrlList: List<String>): Response<List<People>>
+    suspend fun getCharactersForMovie(characterUrlList: List<String>): Response<List<People>>
 }

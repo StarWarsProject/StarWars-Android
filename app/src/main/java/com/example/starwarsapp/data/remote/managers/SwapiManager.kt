@@ -22,9 +22,9 @@ class SwapiManager(private val service: Swapi) : SwapiRepository {
         }
     }
 
-    override suspend fun getCharactersForMovie(charaterUrlList: List<String>): Response<List<People>> {
+    override suspend fun getCharactersForMovie(characterUrlList: List<String>): Response<List<People>> {
         try {
-            val data = charaterUrlList.map {
+            val data = characterUrlList.map {
                 val response = service.getCharacterInformation(it)
                 if (response.isSuccessful) {
                     return@map response.body() ?: People()

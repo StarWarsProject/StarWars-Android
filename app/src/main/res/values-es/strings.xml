@@ -15,6 +15,8 @@
     <string name="planets">Planetas</string>
     <string name="species">Especies</string>
     <string name="ships">Naves</string>
-    <string name="we_can_t_show_you_any_information_yet_ensure_you_have_internet_connection_and_restart_the_app">No podemos mostrar ninguna informacion, asegurate que tienes conexion a internet y luego reinicia la app</string>
+    <string name="we_can_t_show_you_any_information_yet_ensure_you_have_internet_connection_and_restart_the_app">No podemos mostrar ninguna información, asegurate que tienes conexión a internet y luego intenta nuevamente</string>
     <string name="ops_we_can_t_get_the_list_of_movies_right_now">Ops. No podemos obtener la lista de peliculas en este momento</string>
+    <string name="birth_year">Año de nacimiento:&#160;</string>
+    <string name="gender">Género:&#160;</string>
 </resources>

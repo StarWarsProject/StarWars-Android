@@ -6,14 +6,21 @@ object ListUtil {
 
     /**
      * Returns a string containing only IDs (using a SEPARATOR) from a list of
-     * urls that have the id at the end of it http://......./id/.
+     * urls.
      */
     fun urlListToJoinedIdString(urlList: List<String>): String {
         val ids = urlList.map {
-            val splitUrl = it.split("/")
-            return@map splitUrl[splitUrl.size - 2]
+            return@map splitToGetIdFromUrl(it)
         }
         return ids.joinToString(SEPARATOR)
+    }
+
+    /**
+     * Returns the id from a url that has the id at the end https://....../id/.
+     */
+    fun splitToGetIdFromUrl(url: String): String {
+        val splitUrl = url.split("/")
+        return splitUrl[splitUrl.size - 2]
     }
 
     /**
