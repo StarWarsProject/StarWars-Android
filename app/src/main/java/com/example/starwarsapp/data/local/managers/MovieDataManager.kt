@@ -5,6 +5,7 @@ import com.example.starwarsapp.data.local.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.interfaces.MovieLocalRepository
 import com.example.starwarsapp.data.local.models.CharacterEntity
 import com.example.starwarsapp.data.local.models.MovieEntity
+import com.example.starwarsapp.data.local.models.PlanetEntity
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
 import com.example.starwarsapp.utils.ListUtil
 import com.example.starwarsapp.utils.Response
@@ -69,6 +70,36 @@ constructor(private val swapiRepository: SwapiRepository, private val movieLocal
     override suspend fun storeCharactersForMovie(charactersList: List<CharacterEntity>, movieId: Int): Response<Unit> {
         charactersList.forEach {
             movieLocalRepository.storeCharacterForMovie(it, movieId)
+        }
+        return Response.Success(Unit)
+    }
+
+    override suspend fun getPlanetsForMovie(context: Context, movie: MovieEntity): Response<List<PlanetEntity>> {
+        return if (Utils.checkForInternet(context)) {
+            val planetsList = ListUtil.joinedIdStringToArray(movie.planets)
+            val apiDataPlanets = swapiRepository.getPlanetsForMovie(planetsList)
+            val data = apiDataPlanets.data
+            if (data != null) {
+                val entityList = data.map {
+                    it.toEntity()
+                }
+                return Response.Success(entityList)
+            } else {
+                return Response.Error(Response.NO_DATA_AVAILABLE)
+            }
+        } else {
+            val localDataMovies = movieLocalRepository.getPlanetsForMovie(movie.id)
+            if (localDataMovies.isEmpty()) {
+                Response.Error(Response.NO_DATA_AVAILABLE)
+            } else {
+                Response.Success(localDataMovies)
+            }
+        }
+    }
+
+    override suspend fun storePlanetsForMovie(planetsList: List<PlanetEntity>, movieId: Int): Response<Unit> {
+        planetsList.forEach {
+            movieLocalRepository.storePlanetForMovie(it, movieId)
         }
         return Response.Success(Unit)
     }

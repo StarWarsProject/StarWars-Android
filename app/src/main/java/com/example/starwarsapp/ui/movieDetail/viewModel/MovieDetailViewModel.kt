@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.starwarsapp.data.local.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.models.CharacterEntity
 import com.example.starwarsapp.data.local.models.MovieEntity
+import com.example.starwarsapp.data.local.models.PlanetEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,6 +28,9 @@ constructor(private val movieDataRepository: MovieDataRepository) : ViewModel() 
     val charactersList: MutableLiveData<List<CharacterEntity>> by lazy {
         MutableLiveData<List<CharacterEntity>>()
     }
+    val planetsList: MutableLiveData<List<PlanetEntity>> by lazy {
+        MutableLiveData<List<PlanetEntity>>()
+    }
 
     fun setSelectedMovie(movie: MovieEntity) {
         selectedMovie.value = movie
@@ -43,5 +47,19 @@ constructor(private val movieDataRepository: MovieDataRepository) : ViewModel() 
     }
     private fun saveCharactersLocally(charactersList: List<CharacterEntity>, movieId: Int) = viewModelScope.launch(Dispatchers.IO) {
         movieDataRepository.storeCharactersForMovie(charactersList, movieId)
+    }
+
+    fun getAllPlanetsForMovie(context: Context, movie: MovieEntity) = viewModelScope.launch {
+        val data = movieDataRepository.getPlanetsForMovie(context, movie).data
+        if (data != null) {
+            planetsList.value = data
+            savePlanetsLocally(data, movie.id)
+        } else {
+            dataError.value = true
+        }
+    }
+
+    private fun savePlanetsLocally(planetsList: List<PlanetEntity>, movieId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        movieDataRepository.storePlanetsForMovie(planetsList, movieId)
     }
 }

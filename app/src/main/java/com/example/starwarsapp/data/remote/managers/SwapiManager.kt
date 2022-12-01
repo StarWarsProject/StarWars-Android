@@ -5,6 +5,7 @@ import com.example.starwarsapp.data.remote.api.Swapi
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
 import com.example.starwarsapp.data.remote.models.Movie
 import com.example.starwarsapp.data.remote.models.People
+import com.example.starwarsapp.data.remote.models.Planet
 import com.example.starwarsapp.utils.Response
 
 class SwapiManager(private val service: Swapi) : SwapiRepository {
@@ -28,6 +29,24 @@ class SwapiManager(private val service: Swapi) : SwapiRepository {
                 val response = service.getCharacterInformation(it)
                 if (response.isSuccessful) {
                     return@map response.body() ?: People()
+                } else {
+                    Log.e(Response.LOG_ERROR_TAG, response.message())
+                    return Response.Error(response.message())
+                }
+            }
+            return Response.Success(data)
+        } catch (e: Exception) {
+            Log.e(Response.LOG_ERROR_TAG, e.message.toString())
+            return Response.Error(e.toString())
+        }
+    }
+
+    override suspend fun getPlanetsForMovie(planetUrlList: List<String>): Response<List<Planet>> {
+        try {
+            val data = planetUrlList.map {
+                val response = service.getPlanetInformation(it)
+                if (response.isSuccessful) {
+                    return@map response.body() ?: Planet()
                 } else {
                     Log.e(Response.LOG_ERROR_TAG, response.message())
                     return Response.Error(response.message())

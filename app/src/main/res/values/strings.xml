@@ -23,4 +23,6 @@
     <string name="ops_we_can_t_get_the_list_of_movies_right_now">Ops. We can\'t get the list of movies right now</string>
     <string name="birth_year">Birth Year:&#160;</string>
     <string name="gender">Gender:&#160;</string>
+    <string name="climate">Climate:&#160;</string>
+    <string name="terrain">Terrain:&#160;</string>
 </resources>

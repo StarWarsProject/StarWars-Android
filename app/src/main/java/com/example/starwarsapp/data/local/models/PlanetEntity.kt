@@ -12,6 +12,9 @@ data class PlanetEntity(
     val image: String,
     val region: String,
     val system: String,
+    val climate: String,
+    val terrain: String,
+    val population: String,
     val createdAt: Long,
     val updatedAt: Long
 )
