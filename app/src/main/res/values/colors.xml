@@ -10,6 +10,7 @@
     <color name="white2">#ccc</color>
     <color name="black2">#222</color>
     <color name="black1">#111</color>
+    <color name="blackGradient">#7E111111</color>
     <color name="yellow">#fcc419</color>
     <color name="bg_shadow">#D0000000</color>
 </resources>
