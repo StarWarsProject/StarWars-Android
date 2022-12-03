@@ -2,15 +2,17 @@ package com.example.starwarsapp.ui.movieDetail.view
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.animation.LinearInterpolator
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.example.starwarsapp.databinding.FragmentMovieDetailBinding
 import com.example.starwarsapp.ui.movieDetail.adapters.PageAdapter
+import com.example.starwarsapp.ui.movieDetail.viewModel.MovieDetailViewModel
 import com.example.starwarsapp.utils.DrawableManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -24,6 +26,8 @@ class MovieDetailFragment : Fragment() {
     @Inject
     lateinit var drawableManager: DrawableManager
 
+    private val viewModel: MovieDetailViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +40,7 @@ class MovieDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.movieEntity = args.movie
-
+        viewModel.setSelectedMovie(args.movie)
         val imageDrawable = drawableManager.getDrawable(args.movie.title)
         binding.movieBg.setImageDrawable(imageDrawable)
 //        binding.scrollOpCrawl.post {

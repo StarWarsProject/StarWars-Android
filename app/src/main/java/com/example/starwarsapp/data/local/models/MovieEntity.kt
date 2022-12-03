@@ -12,6 +12,11 @@ data class MovieEntity(
     val director: String,
     val producer: String,
     val releaseDate: String,
+    val characters: String,
+    val planets: String,
+    val starships: String,
+    val vehicles: String,
+    val species: String,
     val createdAt: Long,
     val updatedAt: Long
 ) : java.io.Serializable

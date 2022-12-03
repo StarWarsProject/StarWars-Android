@@ -2,7 +2,9 @@ package com.example.starwarsapp.di
 
 import com.example.starwarsapp.StarWarsApplication
 import com.example.starwarsapp.data.local.db.StarWarsDB
+import com.example.starwarsapp.data.local.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.interfaces.MovieLocalRepository
+import com.example.starwarsapp.data.local.managers.MovieDataManager
 import com.example.starwarsapp.data.local.managers.MovieLocalManager
 import com.example.starwarsapp.data.remote.api.Swapi
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
@@ -32,5 +34,11 @@ object ManagersModule {
     @Provides
     fun provideSwapiRepository(retrofitService: Swapi): SwapiRepository {
         return SwapiManager(retrofitService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMovieDataRepository(swapi: SwapiRepository, movieLocalRepository: MovieLocalRepository): MovieDataRepository {
+        return MovieDataManager(swapi, movieLocalRepository)
     }
 }
