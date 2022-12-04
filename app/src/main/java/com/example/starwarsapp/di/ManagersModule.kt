@@ -2,8 +2,12 @@ package com.example.starwarsapp.di
 
 import com.example.starwarsapp.StarWarsApplication
 import com.example.starwarsapp.data.local.db.StarWarsDB
+import com.example.starwarsapp.data.local.interfaces.CharacterDataRepository
+import com.example.starwarsapp.data.local.interfaces.CharacterLocalRepository
 import com.example.starwarsapp.data.local.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.interfaces.MovieLocalRepository
+import com.example.starwarsapp.data.local.managers.CharacterDataManager
+import com.example.starwarsapp.data.local.managers.CharacterLocalManager
 import com.example.starwarsapp.data.local.managers.MovieDataManager
 import com.example.starwarsapp.data.local.managers.MovieLocalManager
 import com.example.starwarsapp.data.remote.api.Swapi
@@ -26,19 +30,33 @@ object ManagersModule {
 
     @Singleton
     @Provides
+    fun provideSwapiRepository(retrofitService: Swapi): SwapiRepository {
+        return SwapiManager(retrofitService)
+    }
+
+    // MOVIES
+    @Singleton
+    @Provides
     fun provideMovieLocalRepository(): MovieLocalRepository {
         return MovieLocalManager(StarWarsApplication.starWarsDB as StarWarsDB)
     }
 
     @Singleton
     @Provides
-    fun provideSwapiRepository(retrofitService: Swapi): SwapiRepository {
-        return SwapiManager(retrofitService)
+    fun provideMovieDataRepository(swapi: SwapiRepository, movieLocalRepository: MovieLocalRepository): MovieDataRepository {
+        return MovieDataManager(swapi, movieLocalRepository)
+    }
+
+    // CHARACTERS
+    @Singleton
+    @Provides
+    fun provideCharacterLocalRepository(): CharacterLocalRepository {
+        return CharacterLocalManager(StarWarsApplication.starWarsDB as StarWarsDB)
     }
 
     @Singleton
     @Provides
-    fun provideMovieDataRepository(swapi: SwapiRepository, movieLocalRepository: MovieLocalRepository): MovieDataRepository {
-        return MovieDataManager(swapi, movieLocalRepository)
+    fun provideCharacterDataRepository(swapi: SwapiRepository, characterLocalRepository: CharacterLocalRepository): CharacterDataRepository {
+        return CharacterDataManager(swapi, characterLocalRepository)
     }
 }
