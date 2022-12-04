@@ -67,8 +67,7 @@ class MovieDetailFragment : Fragment() {
             }
         }
 
-        binding.fragmentsContainer.adapter =
-            activity?.let { PageAdapter(it.supportFragmentManager) }
+        binding.fragmentsContainer.adapter = PageAdapter(childFragmentManager)
         binding.tabs.setupWithViewPager(binding.fragmentsContainer)
     }
 }

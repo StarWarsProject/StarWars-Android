@@ -6,11 +6,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.movieDetail.characters.view.CharactersFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/characters_recycler"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/character_item"/>
+        android:orientation="vertical"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/characters_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/character_item"/>
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/tv_notSynced"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="There are some data not synced, check your internet connection and refresh the list to the get the latest info"
+        android:textColor="@color/yellow"
+        android:textAlignment="center"
+        android:background="@color/bg_shadow"
+        />
+
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="match_parent"

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class MovieEntity(
     @PrimaryKey
-    val id: Int,
+    override val id: Int,
     val title: String,
     val openingCrawl: String,
     val director: String,
@@ -19,4 +19,4 @@ data class MovieEntity(
     val species: String,
     val createdAt: Long,
     val updatedAt: Long
-) : java.io.Serializable
+) : java.io.Serializable, BaseEntity(id = id)

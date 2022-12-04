@@ -10,7 +10,7 @@ import com.example.starwarsapp.ui.movieDetail.planets.view.PlanetsFragment
 import com.example.starwarsapp.ui.movieDetail.ships.view.ShipsFragment
 import com.example.starwarsapp.ui.movieDetail.species.view.SpeciesFragment
 
-class PageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class PageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     override fun getCount(): Int {
         return 4
     }

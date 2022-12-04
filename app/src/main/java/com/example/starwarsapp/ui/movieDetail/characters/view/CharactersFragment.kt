@@ -30,9 +30,15 @@ class CharactersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.charactersRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.charactersRecycler.adapter = CharacterAdapter(listOf())
+        binding.tvNotSynced.visibility = View.GONE
+        binding.refreshContainer.setOnRefreshListener {
+            viewModel.selectedMovie.value?.let {
+                viewModel.refreshCharactersList(binding.root.context, it)
+            }
+        }
         setObservers()
         viewModel.selectedMovie.value?.let {
-            viewModel.getAllCharactersForMovie(binding.root.context, it)
+            viewModel.syncCharactersList(binding.root.context, it)
         }
     }
 
@@ -45,6 +51,7 @@ class CharactersFragment : Fragment() {
                 binding.errorContainer.container.visibility = View.GONE
                 (binding.charactersRecycler.adapter as CharacterAdapter).updateList(list)
             }
+            binding.refreshContainer.isRefreshing = false
         }
         viewModel.dataError.observe(viewLifecycleOwner) { hasError ->
             binding.progressBar.visibility = View.GONE
@@ -53,6 +60,21 @@ class CharactersFragment : Fragment() {
             } else {
                 binding.errorContainer.container.visibility = View.GONE
             }
+            binding.refreshContainer.isRefreshing = false
         }
+        viewModel.syncError.observe(viewLifecycleOwner) { hasError ->
+            binding.progressBar.visibility = View.GONE
+            if (hasError) {
+                binding.tvNotSynced.visibility = View.VISIBLE
+            } else {
+                binding.tvNotSynced.visibility = View.GONE
+            }
+            binding.refreshContainer.isRefreshing = false
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
