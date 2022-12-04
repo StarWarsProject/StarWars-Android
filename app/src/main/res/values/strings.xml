@@ -25,4 +25,5 @@
     <string name="gender">Gender:&#160;</string>
     <string name="climate">Climate:&#160;</string>
     <string name="terrain">Terrain:&#160;</string>
+    <string name="notSynced">There are some data not synced, check your internet connection and refresh the list to the get the latest info</string>
 </resources>

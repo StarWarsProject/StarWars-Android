@@ -6,11 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".ui.movieDetail.planets.view.PlanetsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/planets_recycler"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/planet_item"/>
+        android:orientation="vertical"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/planets_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/planet_item"/>
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/tv_notSynced"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/notSynced"
+        android:textColor="@color/yellow"
+        android:textAlignment="center"
+        android:background="@color/bg_shadow"
+        />
 
     <ProgressBar
         android:id="@+id/progress_bar"

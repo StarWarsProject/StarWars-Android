@@ -20,7 +20,7 @@ class PlanetsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentPlanetsBinding.inflate(layoutInflater, null, false)
         return binding.root
     }
@@ -29,9 +29,15 @@ class PlanetsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.planetsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.planetsRecycler.adapter = PlanetAdapter(listOf())
+        binding.tvNotSynced.visibility = View.GONE
+        binding.refreshContainer.setOnRefreshListener {
+            viewModel.selectedMovie.value?.let {
+                viewModel.refreshPlanetsList(binding.root.context, it)
+            }
+        }
         setObservers()
         viewModel.selectedMovie.value?.let {
-            viewModel.getAllPlanetsForMovie(binding.root.context, it)
+            viewModel.syncPlanetsList(binding.root.context, it)
         }
     }
 
@@ -53,5 +59,19 @@ class PlanetsFragment : Fragment() {
                 binding.errorContainer.container.visibility = View.GONE
             }
         }
+        viewModel.syncError.observe(viewLifecycleOwner) { hasError ->
+            binding.progressBar.visibility = View.GONE
+            if (hasError) {
+                binding.tvNotSynced.visibility = View.VISIBLE
+            } else {
+                binding.tvNotSynced.visibility = View.GONE
+            }
+            binding.refreshContainer.isRefreshing = false
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

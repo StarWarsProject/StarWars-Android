@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class PlanetEntity(
     @PrimaryKey
-    val id: Int,
+    override val id: Int,
     val name: String,
     val description: String,
     val image: String,
@@ -17,4 +17,4 @@ data class PlanetEntity(
     val population: String,
     val createdAt: Long,
     val updatedAt: Long
-)
+) : BaseEntity(id = id)

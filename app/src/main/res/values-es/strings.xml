@@ -25,4 +25,5 @@
     <string name="gender">Género:&#160;</string>
     <string name="climate">Clima:&#160;</string>
     <string name="terrain">Terreno:&#160;</string>
+    <string name="notSynced">Hay algunos datos no sincronizados, verifique su conexión a Internet y actualice la lista para obtener la información más reciente</string>
 </resources>
