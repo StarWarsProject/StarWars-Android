@@ -30,7 +30,7 @@ object RetrofitModule {
             .readTimeout(100, TimeUnit.SECONDS).build()
 
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/")
+            .baseUrl("https://swapi.py4e.com/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
     }
