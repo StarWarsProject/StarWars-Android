@@ -14,7 +14,6 @@ import com.example.starwarsapp.data.local.models.MovieEntity
 import com.example.starwarsapp.databinding.FragmentMoviesListBinding
 import com.example.starwarsapp.ui.home.adapters.MovieAdapter
 import com.example.starwarsapp.ui.home.viewModel.MoviesListViewModel
-import com.example.starwarsapp.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +35,7 @@ class MoviesListFragment : Fragment(), MovieAdapter.IMovieListener {
         super.onViewCreated(view, savedInstanceState)
         binding.moviesRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.moviesRecycler.adapter = MovieAdapter(mutableListOf(), this)
-        binding.errorContainer.visibility = View.GONE
+        binding.errorContainer.container.visibility = View.GONE
 
         binding.ibFilter.setOnClickListener {
             showPopup(it)
@@ -44,17 +43,14 @@ class MoviesListFragment : Fragment(), MovieAdapter.IMovieListener {
 
         viewModel.moviesList.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
-                binding.errorContainer.visibility = View.VISIBLE
+                binding.errorContainer.container.visibility = View.VISIBLE
             } else {
-                binding.errorContainer.visibility = View.GONE
+                binding.errorContainer.container.visibility = View.GONE
                 (binding.moviesRecycler.adapter as MovieAdapter).updateList(it.toMutableList())
             }
         }
 
-        if (Utils.checkForInternet(binding.root.context)) {
-            viewModel.getAllMovies()
-        }
-        viewModel.getAllMoviesLocally()
+        viewModel.getAllMovies(binding.root.context)
     }
 
     private fun showPopup(v: View) {
