@@ -23,11 +23,15 @@ constructor(private val repository: MovieDataRepository) : ViewModel() {
 
     fun getAllMovies(context: Context) = viewModelScope.launch {
         val moviesResponse = repository.getAllMovies(context)
+        print("getting")
         val data = moviesResponse.data
         if (data != null) {
+            print("is not null")
             _moviesList.value = data
             activeMovie.value = data.first()
             saveMoviesLocally(data)
+        } else {
+            print("is null")
         }
     }
 

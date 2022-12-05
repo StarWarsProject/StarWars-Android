@@ -17,7 +17,7 @@ class SwapiManager(private val service: Swapi) : SwapiRepository {
             Log.e(Response.LOG_ERROR_TAG, response.message())
             return Response.Error(response.message())
         } catch (e: Exception) {
-            Log.e(Response.LOG_ERROR_TAG, e.message.toString())
+            Log.e(Response.LOG_ERROR_TAG, e.toString())
             return Response.Error(e.toString())
         }
     }

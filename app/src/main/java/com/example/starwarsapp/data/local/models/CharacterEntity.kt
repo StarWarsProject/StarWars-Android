@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class CharacterEntity(
     @PrimaryKey
-    val id: Int,
+    override val id: Int,
     val name: String,
     val birth: String,
     val description: String,
@@ -17,4 +17,4 @@ data class CharacterEntity(
     val specie: String,
     val createdAt: Long,
     val updatedAt: Long
-)
+) : BaseEntity(id = id)
