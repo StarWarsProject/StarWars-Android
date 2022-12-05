@@ -17,4 +17,15 @@ data class CharacterEntity(
     val specie: String,
     val createdAt: Long,
     val updatedAt: Long
-) : BaseEntity(id = id)
+) : BaseEntity(id = id) {
+    fun characterLocalToCharacterView(): CharacterInfoView {
+        return CharacterInfoView(id, name, birth, gender)
+    }
+}
+
+data class CharacterInfoView(
+    val id: Int,
+    val name: String,
+    val birth: String,
+    val gender: String
+)

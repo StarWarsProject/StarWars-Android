@@ -6,9 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.starwarsapp.data.local.interfaces.CharacterDataRepository
 import com.example.starwarsapp.data.local.interfaces.PlanetDataRepository
-import com.example.starwarsapp.data.local.models.CharacterEntity
-import com.example.starwarsapp.data.local.models.MovieEntity
-import com.example.starwarsapp.data.local.models.PlanetEntity
+import com.example.starwarsapp.data.local.models.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,11 +27,11 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
         MutableLiveData<Boolean>(false)
     }
 
-    val charactersList: MutableLiveData<List<CharacterEntity>> by lazy {
-        MutableLiveData<List<CharacterEntity>>()
+    val charactersList: MutableLiveData<List<CharacterInfoView>> by lazy {
+        MutableLiveData<List<CharacterInfoView>>()
     }
-    val planetsList: MutableLiveData<List<PlanetEntity>> by lazy {
-        MutableLiveData<List<PlanetEntity>>()
+    val planetsList: MutableLiveData<List<PlanetInfoView>> by lazy {
+        MutableLiveData<List<PlanetInfoView>>()
     }
 
     fun setSelectedMovie(movie: MovieEntity) {
@@ -43,7 +41,9 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
     fun refreshCharactersList(context: Context, movie: MovieEntity) = viewModelScope.launch {
         val data = characterDataRepository.getCharactersForMovieFromInternet(context, movie.characters).data
         if (data != null) {
-            charactersList.value = data
+            charactersList.value = data.map {
+                it.characterLocalToCharacterView()
+            }
             syncError.value = false
             saveCharactersLocally(data, movie.id)
         } else {
@@ -58,7 +58,9 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
     fun syncCharactersList(context: Context, movie: MovieEntity) = viewModelScope.launch {
         val response = characterDataRepository.syncCharactersData(context, movie)
         if (response.data != null) {
-            charactersList.value = response.data
+            charactersList.value = response.data.map {
+                it.characterLocalToCharacterView()
+            }
         }
         syncError.value = response.message != null
     }
@@ -66,7 +68,9 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
     fun refreshPlanetsList(context: Context, movie: MovieEntity) = viewModelScope.launch {
         val data = planetDataRepository.getPlanetsForMovieFromInternet(context, movie.planets).data
         if (data != null) {
-            planetsList.value = data
+            planetsList.value = data.map {
+                it.planetLocalToPlanetView()
+            }
             syncError.value = false
             savePlanetsLocally(data, movie.id)
         } else {
@@ -81,7 +85,9 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
     fun syncPlanetsList(context: Context, movie: MovieEntity) = viewModelScope.launch {
         val response = planetDataRepository.syncCPlanetsData(context, movie)
         if (response.data != null) {
-            planetsList.value = response.data
+            planetsList.value = response.data.map {
+                it.planetLocalToPlanetView()
+            }
         }
         syncError.value = response.message != null
     }

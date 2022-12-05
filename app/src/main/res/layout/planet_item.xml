@@ -6,7 +6,7 @@
     <data>
         <variable
             name="planetItem"
-            type="com.example.starwarsapp.data.local.models.PlanetEntity" />
+            type="com.example.starwarsapp.data.local.models.PlanetInfoView" />
     </data>
 
     <FrameLayout

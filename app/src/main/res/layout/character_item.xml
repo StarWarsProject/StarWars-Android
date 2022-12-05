@@ -6,7 +6,7 @@
     <data>
         <variable
             name="characterItem"
-            type="com.example.starwarsapp.data.local.models.CharacterEntity" />
+            type="com.example.starwarsapp.data.local.models.CharacterInfoView" />
     </data>
 
     <FrameLayout

@@ -3,10 +3,10 @@ package com.example.starwarsapp.ui.movieDetail.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.starwarsapp.data.local.models.PlanetEntity
+import com.example.starwarsapp.data.local.models.PlanetInfoView
 import com.example.starwarsapp.databinding.PlanetItemBinding
 
-class PlanetAdapter(var planetList: List<PlanetEntity>) : RecyclerView.Adapter<PlanetAdapter.PlanetViewHolder>() {
+class PlanetAdapter(var planetList: List<PlanetInfoView>) : RecyclerView.Adapter<PlanetAdapter.PlanetViewHolder>() {
     class PlanetViewHolder(val binding: PlanetItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanetViewHolder {
@@ -23,7 +23,7 @@ class PlanetAdapter(var planetList: List<PlanetEntity>) : RecyclerView.Adapter<P
         return planetList.size
     }
 
-    fun updateList(planetEntityList: List<PlanetEntity>) {
+    fun updateList(planetEntityList: List<PlanetInfoView>) {
         val oldSize = this.planetList.size
         this.planetList = planetEntityList
         if (planetEntityList.size <= oldSize) {

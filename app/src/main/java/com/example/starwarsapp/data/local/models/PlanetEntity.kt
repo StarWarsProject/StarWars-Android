@@ -17,4 +17,15 @@ data class PlanetEntity(
     val population: String,
     val createdAt: Long,
     val updatedAt: Long
-) : BaseEntity(id = id)
+) : BaseEntity(id = id) {
+    fun planetLocalToPlanetView(): PlanetInfoView {
+        return PlanetInfoView(id, name, climate, terrain)
+    }
+}
+
+data class PlanetInfoView(
+    val id: Int,
+    val name: String,
+    val climate: String,
+    val terrain: String
+)

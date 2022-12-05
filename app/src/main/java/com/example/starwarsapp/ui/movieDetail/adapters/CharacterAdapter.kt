@@ -3,10 +3,10 @@ package com.example.starwarsapp.ui.movieDetail.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.starwarsapp.data.local.models.CharacterEntity
+import com.example.starwarsapp.data.local.models.CharacterInfoView
 import com.example.starwarsapp.databinding.CharacterItemBinding
 
-class CharacterAdapter(var characterList: List<CharacterEntity>) : RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
+class CharacterAdapter(var characterList: List<CharacterInfoView>) : RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
 
     class CharacterViewHolder(val binding: CharacterItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -24,7 +24,7 @@ class CharacterAdapter(var characterList: List<CharacterEntity>) : RecyclerView.
         return characterList.size
     }
 
-    fun updateList(characterEntityList: List<CharacterEntity>) {
+    fun updateList(characterEntityList: List<CharacterInfoView>) {
         val oldSize = this.characterList.size
         this.characterList = characterEntityList
         if (characterEntityList.size <= oldSize) {
