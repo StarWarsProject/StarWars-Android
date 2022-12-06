@@ -17,4 +17,4 @@ data class CharacterEntity(
     val specie: String,
     val createdAt: Long,
     val updatedAt: Long
-) : BaseEntity(id = id)
+) : BaseEntity

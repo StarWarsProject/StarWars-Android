@@ -5,6 +5,7 @@ import com.example.starwarsapp.data.local.interfaces.CharacterLocalRepository
 import com.example.starwarsapp.data.local.models.CharacterEntity
 import com.example.starwarsapp.data.remote.interfaces.IBaseRemoteData
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
+import com.example.starwarsapp.data.remote.models.People
 import com.example.starwarsapp.data.sync.interfaces.BaseEntityCrud
 import com.example.starwarsapp.utils.Response
 import javax.inject.Inject
@@ -24,7 +25,7 @@ constructor(
     }
 
     override suspend fun getAllRemote(sourceArrayIds: List<String>): Response<List<IBaseRemoteData>> {
-        return swapiRepository.getCharactersForMovie(sourceArrayIds)
+        return swapiRepository.getEntitiesForMovie(sourceArrayIds, People::class.java)
     }
 
     override fun storeSingleEntity(data: CharacterEntity, parentId: Int?): Response<Unit> {

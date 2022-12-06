@@ -8,15 +8,19 @@ import com.example.starwarsapp.data.sync.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.interfaces.MovieLocalRepository
 import com.example.starwarsapp.data.sync.interfaces.PlanetDataRepository
 import com.example.starwarsapp.data.local.interfaces.PlanetLocalRepository
+import com.example.starwarsapp.data.local.interfaces.SpecieLocalRepository
 import com.example.starwarsapp.data.sync.managers.CharacterDataManager
 import com.example.starwarsapp.data.local.managers.CharacterLocalManager
 import com.example.starwarsapp.data.sync.managers.MovieDataManager
 import com.example.starwarsapp.data.local.managers.MovieLocalManager
 import com.example.starwarsapp.data.sync.managers.PlanetDataManager
 import com.example.starwarsapp.data.local.managers.PlanetLocalManager
+import com.example.starwarsapp.data.local.managers.SpecieLocalManager
 import com.example.starwarsapp.data.remote.api.Swapi
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
 import com.example.starwarsapp.data.remote.managers.SwapiManager
+import com.example.starwarsapp.data.sync.interfaces.SpecieDataRepository
+import com.example.starwarsapp.data.sync.managers.SpecieDataManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -75,5 +79,18 @@ object ManagersModule {
     @Provides
     fun providePlanetDataRepository(swapi: SwapiRepository, planetLocalRepository: PlanetLocalRepository): PlanetDataRepository {
         return PlanetDataManager(swapi, planetLocalRepository)
+    }
+
+    // SPECIES
+    @Singleton
+    @Provides
+    fun provideSpecieLocalRepository(): SpecieLocalRepository {
+        return SpecieLocalManager(StarWarsApplication.starWarsDB as StarWarsDB)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSpecieDataRepository(swapi: SwapiRepository, specieLocalRepository: SpecieLocalRepository): SpecieDataRepository {
+        return SpecieDataManager(swapi, specieLocalRepository)
     }
 }

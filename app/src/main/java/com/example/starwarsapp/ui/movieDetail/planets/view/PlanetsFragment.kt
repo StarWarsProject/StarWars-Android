@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.starwarsapp.databinding.FragmentPlanetsBinding
 import com.example.starwarsapp.ui.movieDetail.adapters.PlanetAdapter
 import com.example.starwarsapp.ui.movieDetail.viewModel.MovieDetailViewModel
+import com.example.starwarsapp.ui.movieDetail.viewModel.TypeTabs
 
 class PlanetsFragment : Fragment() {
     private var _binding: FragmentPlanetsBinding? = null
@@ -32,12 +33,12 @@ class PlanetsFragment : Fragment() {
         binding.tvNotSynced.visibility = View.GONE
         binding.refreshContainer.setOnRefreshListener {
             viewModel.selectedMovie.value?.let {
-                viewModel.refreshPlanetsList(binding.root.context, it)
+                viewModel.refreshList(binding.root.context, it, TypeTabs.PLANETS)
             }
         }
         setObservers()
         viewModel.selectedMovie.value?.let {
-            viewModel.syncPlanetsList(binding.root.context, it)
+            viewModel.syncList(binding.root.context, it, TypeTabs.PLANETS)
         }
     }
 
