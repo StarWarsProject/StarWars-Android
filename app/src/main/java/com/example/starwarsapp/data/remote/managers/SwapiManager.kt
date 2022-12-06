@@ -2,13 +2,13 @@ package com.example.starwarsapp.data.remote.managers
 
 import android.util.Log
 import com.example.starwarsapp.data.remote.api.Swapi
+import com.example.starwarsapp.data.remote.interfaces.IBaseRemoteData
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
-import com.example.starwarsapp.data.remote.models.Movie
 import com.example.starwarsapp.data.remote.models.People
 import com.example.starwarsapp.utils.Response
 
 class SwapiManager(private val service: Swapi) : SwapiRepository {
-    override suspend fun getAllMovies(): Response<List<Movie>> {
+    override suspend fun getAllMovies(): Response<List<IBaseRemoteData>> {
         try {
             val response = service.getMovies()
             if (response.isSuccessful) {
@@ -22,7 +22,7 @@ class SwapiManager(private val service: Swapi) : SwapiRepository {
         }
     }
 
-    override suspend fun getCharactersForMovie(characterUrlList: List<String>): Response<List<People>> {
+    override suspend fun getCharactersForMovie(characterUrlList: List<String>): Response<List<IBaseRemoteData>> {
         try {
             val data = characterUrlList.map {
                 val response = service.getCharacterInformation(it)

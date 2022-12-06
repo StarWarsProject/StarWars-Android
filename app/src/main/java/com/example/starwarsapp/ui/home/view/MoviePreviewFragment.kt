@@ -52,7 +52,7 @@ class MoviePreviewFragment : Fragment() {
         }
         binding.btnGoDetails.setOnClickListener {
             val targetMovie = viewModel.activeMovie.value ?: return@setOnClickListener
-            val direction = MainScreenFragmentDirections.actionMainScreenFragmentToMovieDetailFragment(targetMovie)
+            val direction = MainScreenFragmentDirections.actionMainScreenFragmentToMovieDetailFragment(targetMovie.id)
             findNavController().navigate(direction)
         }
     }

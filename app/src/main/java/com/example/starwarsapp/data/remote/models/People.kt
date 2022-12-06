@@ -1,6 +1,7 @@
 package com.example.starwarsapp.data.remote.models
 
 import com.example.starwarsapp.data.local.models.CharacterEntity
+import com.example.starwarsapp.data.remote.interfaces.IBaseRemoteData
 import java.util.Date
 
 data class People(
@@ -20,8 +21,8 @@ data class People(
     val starships: List<String> = listOf(),
     val url: String = "",
     val vehicles: List<String> = listOf()
-) {
-    fun toEntity(): CharacterEntity {
+) : IBaseRemoteData {
+    override fun toEntity(): CharacterEntity {
         val splitUrl = url.split("/")
         val id = splitUrl[splitUrl.size - 2]
         return CharacterEntity(id.toInt(), name, birth_year, "", gender, height, "", homeworld, "", Date().time, Date().time)

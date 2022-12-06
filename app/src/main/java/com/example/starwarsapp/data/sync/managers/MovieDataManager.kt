@@ -1,7 +1,7 @@
-package com.example.starwarsapp.data.local.managers
+package com.example.starwarsapp.data.sync.managers
 
 import android.content.Context
-import com.example.starwarsapp.data.local.interfaces.MovieDataRepository
+import com.example.starwarsapp.data.sync.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.interfaces.MovieLocalRepository
 import com.example.starwarsapp.data.local.models.MovieEntity
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
@@ -11,14 +11,15 @@ import javax.inject.Inject
 
 class MovieDataManager
 @Inject
-constructor(private val swapiRepository: SwapiRepository, private val movieLocalRepository: MovieLocalRepository) : MovieDataRepository {
+constructor(private val swapiRepository: SwapiRepository, private val movieLocalRepository: MovieLocalRepository) :
+    MovieDataRepository {
     override suspend fun getAllMovies(context: Context): Response<List<MovieEntity>> {
         return if (Utils.checkForInternet(context)) {
             val apiDataMovies = swapiRepository.getAllMovies()
             val data = apiDataMovies.data
             if (data != null) {
                 val entityList = data.map {
-                    it.toEntity()
+                    it.toEntity() as MovieEntity
                 }
                 return Response.Success(entityList)
             } else {
@@ -39,5 +40,9 @@ constructor(private val swapiRepository: SwapiRepository, private val movieLocal
             movieLocalRepository.addLocalMovies(it)
         }
         return Response.Success(Unit)
+    }
+
+    override suspend fun getSingleMovie(movieId: Int): MovieEntity {
+        return movieLocalRepository.getSingleMovie(movieId)
     }
 }

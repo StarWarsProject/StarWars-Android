@@ -1,12 +1,9 @@
 package com.example.starwarsapp.ui.movieDetail.view
 
-import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import android.view.animation.LinearInterpolator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
@@ -39,10 +36,7 @@ class MovieDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.movieEntity = args.movie
-        viewModel.setSelectedMovie(args.movie)
-        val imageDrawable = drawableManager.getDrawable(args.movie.title)
-        binding.movieBg.setImageDrawable(imageDrawable)
+        viewModel.setSelectedMovie(args.movieId)
 //        binding.scrollOpCrawl.post {
 //            object : Runnable {
 //                override fun run() {
@@ -51,20 +45,26 @@ class MovieDetailFragment : Fragment() {
 //            }
 //        }
 
-        binding.scrollOpCrawl.viewTreeObserver.addOnGlobalLayoutListener {
-            object : ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    binding.scrollOpCrawl.viewTreeObserver.removeGlobalOnLayoutListener(this)
-                    val objectAnimator = ObjectAnimator.ofInt(
-                        binding.scrollOpCrawl,
-                        "scrollY",
-                        binding.scrollOpCrawl.getChildAt(0).height - binding.scrollOpCrawl.height
-                    )
-                    objectAnimator.duration = 10000
-                    objectAnimator.interpolator = LinearInterpolator()
-                    objectAnimator.start()
-                }
-            }
+//        binding.scrollOpCrawl.viewTreeObserver.addOnGlobalLayoutListener {
+//            object : ViewTreeObserver.OnGlobalLayoutListener {
+//                override fun onGlobalLayout() {
+//                    binding.scrollOpCrawl.viewTreeObserver.removeGlobalOnLayoutListener(this)
+//                    val objectAnimator = ObjectAnimator.ofInt(
+//                        binding.scrollOpCrawl,
+//                        "scrollY",
+//                        binding.scrollOpCrawl.getChildAt(0).height - binding.scrollOpCrawl.height
+//                    )
+//                    objectAnimator.duration = 10000
+//                    objectAnimator.interpolator = LinearInterpolator()
+//                    objectAnimator.start()
+//                }
+//            }
+//        }
+
+        viewModel.selectedMovie.observe(viewLifecycleOwner) {
+            binding.movieEntity = it
+            val imageDrawable = drawableManager.getDrawable(it.title)
+            binding.movieBg.setImageDrawable(imageDrawable)
         }
 
         binding.fragmentsContainer.adapter = PageAdapter(childFragmentManager)
