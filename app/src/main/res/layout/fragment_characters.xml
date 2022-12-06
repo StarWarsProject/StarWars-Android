@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="There are some data not synced, check your internet connection and refresh the list to the get the latest info"
+        android:text="@string/notSynced"
         android:textColor="@color/yellow"
         android:textAlignment="center"
         android:background="@color/bg_shadow"

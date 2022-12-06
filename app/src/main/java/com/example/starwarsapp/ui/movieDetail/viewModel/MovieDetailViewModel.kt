@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.starwarsapp.data.sync.interfaces.PlanetDataRepository
 import com.example.starwarsapp.data.sync.interfaces.CharacterDataRepository
 import com.example.starwarsapp.data.sync.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.models.CharacterEntity
 import com.example.starwarsapp.data.local.models.MovieEntity
+import com.example.starwarsapp.data.local.models.PlanetEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MovieDetailViewModel
 @Inject
-constructor(private val characterDataRepository: CharacterDataRepository, private val movieDataRepository: MovieDataRepository) : ViewModel() {
+constructor(private val characterDataRepository: CharacterDataRepository, private val movieDataRepository: MovieDataRepository, private val planetDataRepository: PlanetDataRepository) : ViewModel() {
 
     val selectedMovie: MutableLiveData<MovieEntity> by lazy {
         MutableLiveData<MovieEntity>()
@@ -30,6 +32,9 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
 
     val charactersList: MutableLiveData<List<CharacterEntity>> by lazy {
         MutableLiveData<List<CharacterEntity>>()
+    }
+    val planetsList: MutableLiveData<List<PlanetEntity>> by lazy {
+        MutableLiveData<List<PlanetEntity>>()
     }
 
     fun setSelectedMovie(movieId: Int) = viewModelScope.launch {
@@ -55,6 +60,29 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
         val response = characterDataRepository.syncData(context, movie.characters, "movie", movie.id)
         if (response.data != null) {
             charactersList.value = response.data
+        }
+        syncError.value = response.message != null
+    }
+
+    fun refreshPlanetsList(context: Context, movie: MovieEntity) = viewModelScope.launch {
+        val data = planetDataRepository.getDataFromInternet(context, movie.planets).data
+        if (data != null) {
+            planetsList.value = data
+            syncError.value = false
+            savePlanetsLocally(data, movie.id)
+        } else {
+            dataError.value = true
+        }
+    }
+
+    private fun savePlanetsLocally(planetsList: List<PlanetEntity>, movieId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        planetDataRepository.storeData(planetsList, movieId)
+    }
+
+    fun syncPlanetsList(context: Context, movie: MovieEntity) = viewModelScope.launch {
+        val response = planetDataRepository.syncData(context, movie.planets, "movie", movie.id)
+        if (response.data != null) {
+            planetsList.value = response.data
         }
         syncError.value = response.message != null
     }

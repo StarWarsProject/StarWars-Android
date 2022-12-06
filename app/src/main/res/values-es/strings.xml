@@ -23,4 +23,7 @@
     <string name="ops_we_can_t_get_the_list_of_movies_right_now">Ops. No podemos obtener la lista de peliculas en este momento</string>
     <string name="birth_year">Año de nacimiento:&#160;</string>
     <string name="gender">Género:&#160;</string>
+    <string name="climate">Clima:&#160;</string>
+    <string name="terrain">Terreno:&#160;</string>
+    <string name="notSynced">Hay algunos datos no sincronizados, verifique su conexión a Internet y actualice la lista para obtener la información más reciente</string>
 </resources>

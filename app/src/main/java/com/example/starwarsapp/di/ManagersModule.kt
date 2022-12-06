@@ -6,10 +6,14 @@ import com.example.starwarsapp.data.sync.interfaces.CharacterDataRepository
 import com.example.starwarsapp.data.local.interfaces.CharacterLocalRepository
 import com.example.starwarsapp.data.sync.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.interfaces.MovieLocalRepository
+import com.example.starwarsapp.data.sync.interfaces.PlanetDataRepository
+import com.example.starwarsapp.data.local.interfaces.PlanetLocalRepository
 import com.example.starwarsapp.data.sync.managers.CharacterDataManager
 import com.example.starwarsapp.data.local.managers.CharacterLocalManager
 import com.example.starwarsapp.data.sync.managers.MovieDataManager
 import com.example.starwarsapp.data.local.managers.MovieLocalManager
+import com.example.starwarsapp.data.sync.managers.PlanetDataManager
+import com.example.starwarsapp.data.local.managers.PlanetLocalManager
 import com.example.starwarsapp.data.remote.api.Swapi
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
 import com.example.starwarsapp.data.remote.managers.SwapiManager
@@ -58,5 +62,18 @@ object ManagersModule {
     @Provides
     fun provideCharacterDataRepository(swapi: SwapiRepository, characterLocalRepository: CharacterLocalRepository): CharacterDataRepository {
         return CharacterDataManager(swapi, characterLocalRepository)
+    }
+
+    // PLANETS
+    @Singleton
+    @Provides
+    fun providePlanetLocalRepository(): PlanetLocalRepository {
+        return PlanetLocalManager(StarWarsApplication.starWarsDB as StarWarsDB)
+    }
+
+    @Singleton
+    @Provides
+    fun providePlanetDataRepository(swapi: SwapiRepository, planetLocalRepository: PlanetLocalRepository): PlanetDataRepository {
+        return PlanetDataManager(swapi, planetLocalRepository)
     }
 }
