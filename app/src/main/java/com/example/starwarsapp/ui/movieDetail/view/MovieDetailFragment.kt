@@ -37,29 +37,6 @@ class MovieDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSelectedMovie(args.movieId)
-//        binding.scrollOpCrawl.post {
-//            object : Runnable {
-//                override fun run() {
-//                    binding.scrollOpCrawl.smoothScrollTo(0, binding.scrollOpCrawl.bottom)
-//                }
-//            }
-//        }
-
-//        binding.scrollOpCrawl.viewTreeObserver.addOnGlobalLayoutListener {
-//            object : ViewTreeObserver.OnGlobalLayoutListener {
-//                override fun onGlobalLayout() {
-//                    binding.scrollOpCrawl.viewTreeObserver.removeGlobalOnLayoutListener(this)
-//                    val objectAnimator = ObjectAnimator.ofInt(
-//                        binding.scrollOpCrawl,
-//                        "scrollY",
-//                        binding.scrollOpCrawl.getChildAt(0).height - binding.scrollOpCrawl.height
-//                    )
-//                    objectAnimator.duration = 10000
-//                    objectAnimator.interpolator = LinearInterpolator()
-//                    objectAnimator.start()
-//                }
-//            }
-//        }
 
         viewModel.selectedMovie.observe(viewLifecycleOwner) {
             binding.movieEntity = it
