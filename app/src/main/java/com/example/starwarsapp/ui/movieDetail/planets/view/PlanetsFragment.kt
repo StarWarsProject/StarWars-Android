@@ -51,6 +51,7 @@ class PlanetsFragment : Fragment() {
                 binding.errorContainer.container.visibility = View.GONE
                 (binding.planetsRecycler.adapter as PlanetAdapter).updateList(list)
             }
+            binding.refreshContainer.isRefreshing = false
         }
         viewModel.dataError.observe(viewLifecycleOwner) { hasError ->
             binding.progressBar.visibility = View.GONE
@@ -59,6 +60,7 @@ class PlanetsFragment : Fragment() {
             } else {
                 binding.errorContainer.container.visibility = View.GONE
             }
+            binding.refreshContainer.isRefreshing = false
         }
         viewModel.syncError.observe(viewLifecycleOwner) { hasError ->
             binding.progressBar.visibility = View.GONE

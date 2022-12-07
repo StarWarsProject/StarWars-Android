@@ -1,9 +1,6 @@
 package com.example.starwarsapp.data.remote.api
 
-import com.example.starwarsapp.data.remote.models.MovieResponse
-import com.example.starwarsapp.data.remote.models.People
-import com.example.starwarsapp.data.remote.models.Planet
-import com.example.starwarsapp.data.remote.models.Specie
+import com.example.starwarsapp.data.remote.models.*
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -20,4 +17,7 @@ interface Swapi {
 
     @GET("api/species/{id}")
     suspend fun getSpecieInformation(@Path("id") id: String): Response<Specie>
+
+    @GET("api/starships/{id}")
+    suspend fun getStarshipInformation(@Path("id") id: String): Response<Starship>
 }

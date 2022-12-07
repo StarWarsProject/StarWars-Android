@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class StarshipEntity(
     @PrimaryKey
-    val id: Int,
+    override val id: Int,
     val name: String,
     val model: String,
     val manufacturer: String,
@@ -18,4 +18,4 @@ data class StarshipEntity(
     val starshipClass: String,
     val createdAt: Long,
     val updatedAt: Long
-)
+) : BaseEntity
