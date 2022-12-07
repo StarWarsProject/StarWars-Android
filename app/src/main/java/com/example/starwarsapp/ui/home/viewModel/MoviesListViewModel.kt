@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.starwarsapp.data.local.interfaces.MovieDataRepository
+import com.example.starwarsapp.data.sync.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.models.MovieEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

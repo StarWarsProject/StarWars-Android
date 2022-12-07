@@ -1,6 +1,7 @@
 package com.example.starwarsapp.data.remote.models
 
 import com.example.starwarsapp.data.local.models.MovieEntity
+import com.example.starwarsapp.data.remote.interfaces.IBaseRemoteData
 import com.example.starwarsapp.utils.ListUtil
 import java.util.Date
 
@@ -26,8 +27,8 @@ data class Movie(
     val created: String,
     val edited: String,
     val url: String
-) {
-    fun toEntity(): MovieEntity {
+) : IBaseRemoteData {
+    override fun toEntity(): MovieEntity {
         val charactersStr = ListUtil.urlListToJoinedIdString(characters)
         val planetsStr = ListUtil.urlListToJoinedIdString(planets)
         val starshipsStr = ListUtil.urlListToJoinedIdString(starships)

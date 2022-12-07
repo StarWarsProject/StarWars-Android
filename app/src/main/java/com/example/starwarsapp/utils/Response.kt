@@ -6,6 +6,7 @@ sealed class Response<T>(
 ) {
     companion object {
         const val NO_DATA_AVAILABLE = "No data"
+        const val DATABASE_ERROR = "DB Error"
         const val NO_INTERNET = "No internet"
         const val LOG_ERROR_TAG = "LOG_error_tag"
     }

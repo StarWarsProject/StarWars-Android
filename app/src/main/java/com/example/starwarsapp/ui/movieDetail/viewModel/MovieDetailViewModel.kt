@@ -4,8 +4,9 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.starwarsapp.data.local.interfaces.CharacterDataRepository
-import com.example.starwarsapp.data.local.interfaces.PlanetDataRepository
+import com.example.starwarsapp.data.sync.interfaces.PlanetDataRepository
+import com.example.starwarsapp.data.sync.interfaces.CharacterDataRepository
+import com.example.starwarsapp.data.sync.interfaces.MovieDataRepository
 import com.example.starwarsapp.data.local.models.CharacterEntity
 import com.example.starwarsapp.data.local.models.MovieEntity
 import com.example.starwarsapp.data.local.models.PlanetEntity
@@ -17,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MovieDetailViewModel
 @Inject
-constructor(private val characterDataRepository: CharacterDataRepository, private val planetDataRepository: PlanetDataRepository) : ViewModel() {
+constructor(private val characterDataRepository: CharacterDataRepository, private val movieDataRepository: MovieDataRepository, private val planetDataRepository: PlanetDataRepository) : ViewModel() {
 
     val selectedMovie: MutableLiveData<MovieEntity> by lazy {
         MutableLiveData<MovieEntity>()
@@ -36,12 +37,12 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
         MutableLiveData<List<PlanetEntity>>()
     }
 
-    fun setSelectedMovie(movie: MovieEntity) {
-        selectedMovie.value = movie
+    fun setSelectedMovie(movieId: Int) = viewModelScope.launch {
+        selectedMovie.value = movieDataRepository.getSingleMovie(movieId)
     }
 
     fun refreshCharactersList(context: Context, movie: MovieEntity) = viewModelScope.launch {
-        val data = characterDataRepository.getCharactersForMovieFromInternet(context, movie.characters).data
+        val data = characterDataRepository.getDataFromInternet(context, movie.characters).data
         if (data != null) {
             charactersList.value = data
             syncError.value = false
@@ -52,11 +53,11 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
     }
 
     private fun saveCharactersLocally(charactersList: List<CharacterEntity>, movieId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        characterDataRepository.storeCharactersForMovie(charactersList, movieId)
+        characterDataRepository.storeData(charactersList, movieId)
     }
 
     fun syncCharactersList(context: Context, movie: MovieEntity) = viewModelScope.launch {
-        val response = characterDataRepository.syncCharactersData(context, movie)
+        val response = characterDataRepository.syncData(context, movie.characters, "movie", movie.id)
         if (response.data != null) {
             charactersList.value = response.data
         }
@@ -64,7 +65,7 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
     }
 
     fun refreshPlanetsList(context: Context, movie: MovieEntity) = viewModelScope.launch {
-        val data = planetDataRepository.getPlanetsForMovieFromInternet(context, movie.planets).data
+        val data = planetDataRepository.getDataFromInternet(context, movie.planets).data
         if (data != null) {
             planetsList.value = data
             syncError.value = false
@@ -75,11 +76,11 @@ constructor(private val characterDataRepository: CharacterDataRepository, privat
     }
 
     private fun savePlanetsLocally(planetsList: List<PlanetEntity>, movieId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        planetDataRepository.storePlanetsForMovie(planetsList, movieId)
+        planetDataRepository.storeData(planetsList, movieId)
     }
 
     fun syncPlanetsList(context: Context, movie: MovieEntity) = viewModelScope.launch {
-        val response = planetDataRepository.syncCPlanetsData(context, movie)
+        val response = planetDataRepository.syncData(context, movie.planets, "movie", movie.id)
         if (response.data != null) {
             planetsList.value = response.data
         }

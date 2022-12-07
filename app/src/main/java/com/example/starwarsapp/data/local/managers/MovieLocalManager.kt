@@ -12,4 +12,8 @@ class MovieLocalManager(private val localStarWarsDB: StarWarsDB) : MovieLocalRep
     override fun getLocalMovies(): List<MovieEntity> {
         return localStarWarsDB.movieDao().getAllMovies()
     }
+
+    override fun getSingleMovie(movieId: Int): MovieEntity {
+        return localStarWarsDB.movieDao().getSingleMovie(movieId)
+    }
 }

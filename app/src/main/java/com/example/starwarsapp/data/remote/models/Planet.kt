@@ -1,6 +1,7 @@
 package com.example.starwarsapp.data.remote.models
 
 import com.example.starwarsapp.data.local.models.PlanetEntity
+import com.example.starwarsapp.data.remote.interfaces.IBaseRemoteData
 import java.util.*
 
 data class Planet(
@@ -18,8 +19,8 @@ data class Planet(
     val created: String = "",
     val edited: String = "",
     val url: String = ""
-) {
-    fun toEntity(): PlanetEntity {
+) : IBaseRemoteData {
+    override fun toEntity(): PlanetEntity {
         val splitUrl = url.split("/")
         val id = splitUrl[splitUrl.size - 2]
         return PlanetEntity(id.toInt(), name, "", "", "", "", climate, terrain, population, Date().time, Date().time)

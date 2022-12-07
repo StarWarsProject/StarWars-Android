@@ -1,12 +1,9 @@
 package com.example.starwarsapp.data.remote.interfaces
 
-import com.example.starwarsapp.data.remote.models.Movie
-import com.example.starwarsapp.data.remote.models.People
-import com.example.starwarsapp.data.remote.models.Planet
 import com.example.starwarsapp.utils.Response
 
 interface SwapiRepository {
-    suspend fun getAllMovies(): Response<List<Movie>>
-    suspend fun getCharactersForMovie(characterUrlList: List<String>): Response<List<People>>
-    suspend fun getPlanetsForMovie(planetUrlList: List<String>): Response<List<Planet>>
+    suspend fun getAllMovies(): Response<List<IBaseRemoteData>>
+    suspend fun getCharactersForMovie(characterUrlList: List<String>): Response<List<IBaseRemoteData>>
+    suspend fun getPlanetsForMovie(planetUrlList: List<String>): Response<List<IBaseRemoteData>>
 }

@@ -19,7 +19,7 @@
         android:label="fragment_movie_detail"
         tools:layout="@layout/fragment_movie_detail" >
         <argument
-            android:name="movie"
-            app:argType="com.example.starwarsapp.data.local.models.MovieEntity" />
+            android:name="movieId"
+            app:argType="integer" />
     </fragment>
 </navigation>
