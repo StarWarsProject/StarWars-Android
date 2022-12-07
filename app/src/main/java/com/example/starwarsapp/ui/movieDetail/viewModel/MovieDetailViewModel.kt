@@ -5,10 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.starwarsapp.data.local.models.*
-import com.example.starwarsapp.data.sync.interfaces.PlanetDataRepository
-import com.example.starwarsapp.data.sync.interfaces.CharacterDataRepository
-import com.example.starwarsapp.data.sync.interfaces.MovieDataRepository
-import com.example.starwarsapp.data.sync.interfaces.SpecieDataRepository
+import com.example.starwarsapp.data.sync.interfaces.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +22,8 @@ constructor(
     private val characterDataRepository: CharacterDataRepository,
     private val movieDataRepository: MovieDataRepository,
     private val planetDataRepository: PlanetDataRepository,
-    private val specieDataRepository: SpecieDataRepository
+    private val specieDataRepository: SpecieDataRepository,
+    private val starshipDataRepository: StarshipDataRepository
 ) : ViewModel() {
 
     val selectedMovie: MutableLiveData<MovieEntity> by lazy {
@@ -46,6 +44,9 @@ constructor(
     }
     val speciesList: MutableLiveData<List<SpecieEntity>> by lazy {
         MutableLiveData<List<SpecieEntity>>()
+    }
+    val starshipsList: MutableLiveData<List<StarshipEntity>> by lazy {
+        MutableLiveData<List<StarshipEntity>>()
     }
 
     fun setSelectedMovie(movieId: Int) = viewModelScope.launch {
@@ -71,6 +72,12 @@ constructor(
                 data = specieDataRepository.getDataFromInternet(context, movie.species).data
                 if (data != null) {
                     speciesList.value = data
+                }
+            }
+            TypeTabs.SHIPS -> {
+                data = starshipDataRepository.getDataFromInternet(context, movie.starships).data
+                if (data != null) {
+                    starshipsList.value = data
                 }
             }
             else -> {}
@@ -119,6 +126,14 @@ constructor(
                 messageError = result.message
                 if (response != null) {
                     speciesList.value = response
+                }
+            }
+            TypeTabs.SHIPS -> {
+                val result = starshipDataRepository.syncData(context, movie.starships, "movie", movie.id)
+                response = result.data
+                messageError = result.message
+                if (response != null) {
+                    starshipsList.value = response
                 }
             }
             else -> {}
