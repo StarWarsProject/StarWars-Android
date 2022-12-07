@@ -37,7 +37,6 @@ class MovieDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSelectedMovie(args.movieId)
-
         viewModel.selectedMovie.observe(viewLifecycleOwner) {
             binding.movieEntity = it
             val imageDrawable = drawableManager.getDrawable(it.title)
