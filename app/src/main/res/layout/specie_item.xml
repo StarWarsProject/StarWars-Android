@@ -9,36 +9,79 @@
             type="com.example.starwarsapp.data.local.models.SpecieEntity" />
     </data>
 
-    <LinearLayout
+    <FrameLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blackGradient"
-        android:orientation="vertical"
-        >
+        android:layout_margin="5dp">
 
-        <TextView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{specieItem.name}"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Human"
-            />
+            app:cardBackgroundColor="@color/white2">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{specieItem.classification}"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="sentient"
-            />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{specieItem.language}"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Galactic Basic"
-            />
+                <TextView
+                    android:id="@+id/character_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:text="@{specieItem.name}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Specie name" />
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/birth_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@+id/character_name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="Clasification: " />
+
+                <TextView
+                    android:id="@+id/birth_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="@{specieItem.classification}"
+                    app:layout_constraintTop_toBottomOf="@+id/character_name"
+                    app:layout_constraintStart_toEndOf="@id/birth_label"
+                    tools:text="Clasification name" />
+
+                <TextView
+                    android:id="@+id/gender_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@+id/birth_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="Language: " />
+
+                <TextView
+                    android:id="@+id/gender_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="@{specieItem.language}"
+                    app:layout_constraintTop_toBottomOf="@+id/birth_text"
+                    app:layout_constraintStart_toEndOf="@id/gender_label"
+                    tools:text="Language name" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+    </FrameLayout>
 </layout>
