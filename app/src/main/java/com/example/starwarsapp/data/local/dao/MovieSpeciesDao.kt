@@ -10,10 +10,10 @@ import com.example.starwarsapp.data.local.models.SpecieEntity
 @Dao
 interface MovieSpeciesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addMovieSpecie(movieSpeciesEntity: MovieSpeciesEntity)
+    suspend fun addMovieSpecie(movieSpeciesEntity: MovieSpeciesEntity)
 
     @Query(
         "SELECT a.* FROM SpecieEntity as a, MovieSpeciesEntity as b WHERE a.id = b.specieId " + "AND b.movieId = :movieId"
     )
-    fun getSpecies(movieId: Int): List<SpecieEntity>
+    suspend fun getSpecies(movieId: Int): List<SpecieEntity>
 }

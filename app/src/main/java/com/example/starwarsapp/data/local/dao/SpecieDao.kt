@@ -8,5 +8,5 @@ import com.example.starwarsapp.data.local.models.SpecieEntity
 @Dao
 interface SpecieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addSpecie(specieEntity: SpecieEntity)
+    suspend fun addSpecie(specieEntity: SpecieEntity)
 }

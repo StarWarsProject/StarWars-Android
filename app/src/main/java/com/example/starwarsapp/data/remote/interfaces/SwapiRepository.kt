@@ -8,7 +8,4 @@ interface SwapiRepository {
         dataUrlList: List<String>,
         type: Class<T>
     ): Response<List<IBaseRemoteData>>
-//    suspend fun getCharactersForMovie(characterUrlList: List<String>): Response<List<IBaseRemoteData>>
-//    suspend fun getPlanetsForMovie(planetUrlList: List<String>): Response<List<IBaseRemoteData>>
-//    suspend fun getSpeciesForMovie(specieUrlList: List<String>): Response<List<IBaseRemoteData>>
 }

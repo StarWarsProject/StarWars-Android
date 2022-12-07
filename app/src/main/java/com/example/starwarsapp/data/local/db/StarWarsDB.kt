@@ -28,7 +28,6 @@ abstract class StarWarsDB : RoomDatabase() {
         fun create(context: Context): StarWarsDB {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context, StarWarsDB::class.java, "StarWarsDB")
-                    .allowMainThreadQueries()
                     .fallbackToDestructiveMigration()
                     .build()
 

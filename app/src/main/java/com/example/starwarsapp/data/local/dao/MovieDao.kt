@@ -9,11 +9,11 @@ import com.example.starwarsapp.data.local.models.MovieEntity
 @Dao
 interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addMovie(movieEntity: MovieEntity)
+    suspend fun addMovie(movieEntity: MovieEntity)
 
     @Query("SELECT * FROM movieentity")
-    fun getAllMovies(): List<MovieEntity>
+    suspend fun getAllMovies(): List<MovieEntity>
 
     @Query("SELECT * FROM MovieEntity WHERE id = :movieId")
-    fun getSingleMovie(movieId: Int): MovieEntity
+    suspend fun getSingleMovie(movieId: Int): MovieEntity
 }

@@ -38,12 +38,12 @@ class SpeciesFragment : Fragment() {
             }
         }
         setObservers()
-        viewModel.selectedMovie.value?.let {
-            viewModel.syncList(binding.root.context, it, TypeTabs.SPECIES)
-        }
     }
 
     private fun setObservers() {
+        viewModel.selectedMovie.observe(viewLifecycleOwner) {
+            viewModel.syncList(binding.root.context, it, TypeTabs.SPECIES)
+        }
         viewModel.speciesList.observe(viewLifecycleOwner) { list ->
             if (list.isEmpty()) {
                 binding.errorContainer.container.visibility = View.VISIBLE

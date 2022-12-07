@@ -16,7 +16,7 @@ constructor(
     private val swapiRepository: SwapiRepository,
     private val specieLocalRepository: SpecieLocalRepository
 ) : BaseEntityCrud<SpecieEntity> {
-    override fun getAllLocal(propName: String?, value: Any?): Response<List<SpecieEntity>> {
+    override suspend fun getAllLocal(propName: String?, value: Any?): Response<List<SpecieEntity>> {
         return if (propName == "movie") {
             Response.Success(specieLocalRepository.getSpeciesForMovie(value as Int))
         } else {
@@ -28,7 +28,7 @@ constructor(
         return swapiRepository.getEntitiesForMovie(sourceArrayIds, Specie::class.java)
     }
 
-    override fun storeSingleEntity(data: SpecieEntity, parentId: Int?): Response<Unit> {
+    override suspend fun storeSingleEntity(data: SpecieEntity, parentId: Int?): Response<Unit> {
         return if (parentId != null) {
             Response.Success(specieLocalRepository.storeSpecieForMovie(data, parentId))
         } else {
