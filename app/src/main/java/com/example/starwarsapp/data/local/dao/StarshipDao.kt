@@ -8,5 +8,5 @@ import com.example.starwarsapp.data.local.models.StarshipEntity
 @Dao
 interface StarshipDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addStarship(starshipEntity: StarshipEntity)
+    suspend fun addStarship(starshipEntity: StarshipEntity)
 }

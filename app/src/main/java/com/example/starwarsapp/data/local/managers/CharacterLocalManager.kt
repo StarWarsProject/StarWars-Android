@@ -6,11 +6,11 @@ import com.example.starwarsapp.data.local.models.CharacterEntity
 import com.example.starwarsapp.data.local.models.MovieCharactersEntity
 
 class CharacterLocalManager(private val localStarWarsDB: StarWarsDB) : CharacterLocalRepository {
-    override fun getCharactersForMovie(movieId: Int): List<CharacterEntity> {
+    override suspend fun getCharactersForMovie(movieId: Int): List<CharacterEntity> {
         return localStarWarsDB.movieCharactersDao().getCharacters(movieId)
     }
 
-    override fun storeCharacterForMovie(characterEntity: CharacterEntity, movieId: Int) {
+    override suspend fun storeCharacterForMovie(characterEntity: CharacterEntity, movieId: Int) {
         localStarWarsDB.characterDao().addCharacter(characterEntity)
         localStarWarsDB.movieCharactersDao().addMovieCharacter(MovieCharactersEntity(movieId, characterEntity.id))
     }

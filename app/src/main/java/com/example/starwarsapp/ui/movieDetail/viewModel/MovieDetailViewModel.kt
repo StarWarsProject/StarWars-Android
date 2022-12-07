@@ -9,6 +9,7 @@ import com.example.starwarsapp.data.sync.interfaces.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 enum class TypeTabs {
@@ -50,40 +51,51 @@ constructor(
     }
 
     fun setSelectedMovie(movieId: Int) = viewModelScope.launch {
-        selectedMovie.value = movieDataRepository.getSingleMovie(movieId)
+        val result = movieDataRepository.getSingleMovie(movieId)
+        selectedMovie.value = result
     }
 
-    fun refreshList(context: Context, movie: MovieEntity, type: TypeTabs) = viewModelScope.launch {
+    fun refreshList(context: Context, movie: MovieEntity, type: TypeTabs) = viewModelScope.launch(Dispatchers.IO) {
         var data: List<BaseEntity>? = null
         when (type) {
             TypeTabs.CHARACTERS -> {
                 data = characterDataRepository.getDataFromInternet(context, movie.characters).data
                 if (data != null) {
-                    charactersList.value = data
+                    withContext(Dispatchers.Main) {
+                        charactersList.value = data as List<CharacterEntity>
+                    }
                 }
             }
             TypeTabs.PLANETS -> {
                 data = planetDataRepository.getDataFromInternet(context, movie.planets).data
                 if (data != null) {
-                    planetsList.value = data
+                    withContext(Dispatchers.Main) {
+                        planetsList.value = data as List<PlanetEntity>
+                    }
                 }
             }
             TypeTabs.SPECIES -> {
                 data = specieDataRepository.getDataFromInternet(context, movie.species).data
                 if (data != null) {
-                    speciesList.value = data
+                    withContext(Dispatchers.Main) {
+                        speciesList.value = data as List<SpecieEntity>
+                    }
                 }
             }
             TypeTabs.SHIPS -> {
                 data = starshipDataRepository.getDataFromInternet(context, movie.starships).data
                 if (data != null) {
-                    starshipsList.value = data
+                    withContext(Dispatchers.Main) {
+                        starshipsList.value = data as List<StarshipEntity>
+                    }
                 }
             }
             else -> {}
         }
         if (data != null) {
-            syncError.value = false
+            withContext(Dispatchers.Main) {
+                syncError.value = false
+            }
             saveDataLocally(data, movie.id, type)
         } else {
             dataError.value = true
@@ -91,7 +103,7 @@ constructor(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun saveDataLocally(dataList: List<BaseEntity>, movieId: Int, type: TypeTabs) = viewModelScope.launch(Dispatchers.IO) {
+    fun saveDataLocally(dataList: List<BaseEntity>, movieId: Int, type: TypeTabs) = viewModelScope.launch {
         when (type) {
             TypeTabs.CHARACTERS -> characterDataRepository.storeData(dataList as List<CharacterEntity>, movieId)
             TypeTabs.PLANETS -> planetDataRepository.storeData(dataList as List<PlanetEntity>, movieId)
@@ -101,7 +113,7 @@ constructor(
     }
 
     fun syncList(context: Context, movie: MovieEntity, type: TypeTabs) = viewModelScope.launch {
-        var response: List<BaseEntity>? = null
+        var response: List<BaseEntity>?
         var messageError: String? = null
         when (type) {
             TypeTabs.CHARACTERS -> {

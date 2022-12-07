@@ -22,7 +22,6 @@ class MovieDetailFragment : Fragment() {
 
     @Inject
     lateinit var drawableManager: DrawableManager
-
     private val viewModel: MovieDetailViewModel by activityViewModels()
 
     override fun onCreateView(

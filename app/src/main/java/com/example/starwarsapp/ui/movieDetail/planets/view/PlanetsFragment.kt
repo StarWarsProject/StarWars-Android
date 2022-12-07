@@ -43,6 +43,9 @@ class PlanetsFragment : Fragment() {
     }
 
     private fun setObservers() {
+        viewModel.selectedMovie.observe(viewLifecycleOwner) {
+            viewModel.syncList(binding.root.context, it, TypeTabs.PLANETS)
+        }
         viewModel.planetsList.observe(viewLifecycleOwner) { list ->
             if (list.isEmpty()) {
                 binding.errorContainer.container.visibility = View.VISIBLE

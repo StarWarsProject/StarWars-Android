@@ -8,5 +8,5 @@ import com.example.starwarsapp.data.local.models.CharacterEntity
 @Dao
 interface CharacterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addCharacter(characterEntity: CharacterEntity)
+    suspend fun addCharacter(characterEntity: CharacterEntity)
 }

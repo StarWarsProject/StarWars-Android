@@ -16,7 +16,7 @@ constructor(
     private val swapiRepository: SwapiRepository,
     private val starshipLocalRepository: StarshipLocalRepository
 ) : BaseEntityCrud<StarshipEntity> {
-    override fun getAllLocal(propName: String?, value: Any?): Response<List<StarshipEntity>> {
+    override suspend fun getAllLocal(propName: String?, value: Any?): Response<List<StarshipEntity>> {
         return if (propName == "movie") {
             Response.Success(starshipLocalRepository.getStarshipsForMovie(value as Int))
         } else {
@@ -28,7 +28,7 @@ constructor(
         return swapiRepository.getEntitiesForMovie(sourceArrayIds, Starship::class.java)
     }
 
-    override fun storeSingleEntity(data: StarshipEntity, parentId: Int?): Response<Unit> {
+    override suspend fun storeSingleEntity(data: StarshipEntity, parentId: Int?): Response<Unit> {
         return if (parentId != null) {
             Response.Success(starshipLocalRepository.storeStarshipForMovie(data, parentId))
         } else {

@@ -1,6 +1,7 @@
 package com.example.starwarsapp.ui.home.adapters
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -27,9 +28,17 @@ class MovieAdapter(var moviesList: MutableList<MovieEntity>, val listener: IMovi
         holder.binding.movieItem = moviesList[position]
 
         val uri = "@drawable/${moviesList[position].title.lowercase().split(" ").joinToString("_")}"
-        val imageResource = holder.binding.root.context.resources.getIdentifier(uri, null, holder.binding.root.context.packageName)
-        val imageDrawable = holder.binding.root.context.getDrawable(imageResource)
-        holder.binding.ivMoviePoster.setImageDrawable(imageDrawable)
+        var imageResource = -1
+        try {
+            imageResource = holder.binding.root.context.resources.getIdentifier(uri, null, holder.binding.root.context.packageName)
+            val imageDrawable = holder.binding.root.context.getDrawable(imageResource)
+            holder.binding.ivMoviePoster.setImageDrawable(imageDrawable)
+        } catch (error: Exception) {
+            error.localizedMessage?.let { Log.d("Movies", it) }
+            imageResource = holder.binding.root.context.resources.getIdentifier("@drawable/no_found_image", null, holder.binding.root.context.packageName)
+            val imageDrawable = holder.binding.root.context.getDrawable(imageResource)
+            holder.binding.ivMoviePoster.setImageDrawable(imageDrawable)
+        }
         holder.binding.movieContainer.setOnClickListener {
             listener.onMovieTap(moviesList[position])
         }

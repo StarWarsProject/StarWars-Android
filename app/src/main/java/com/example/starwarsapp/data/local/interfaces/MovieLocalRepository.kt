@@ -3,7 +3,7 @@ package com.example.starwarsapp.data.local.interfaces
 import com.example.starwarsapp.data.local.models.MovieEntity
 
 interface MovieLocalRepository {
-    fun addLocalMovies(movieEntity: MovieEntity)
-    fun getLocalMovies(): List<MovieEntity>
-    fun getSingleMovie(movieId: Int): MovieEntity
+    suspend fun addLocalMovies(movieEntity: MovieEntity)
+    suspend fun getLocalMovies(): List<MovieEntity>
+    suspend fun getSingleMovie(movieId: Int): MovieEntity
 }
