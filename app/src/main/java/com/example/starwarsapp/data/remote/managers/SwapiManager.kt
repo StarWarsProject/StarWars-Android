@@ -12,7 +12,7 @@ class SwapiManager(private val service: Swapi) : SwapiRepository {
     override suspend fun getAllMovies(): Response<List<IBaseRemoteData>> {
         try {
             val response = service.getMovies()
-            if (response.isSuccessful) {
+            if ((200..299).contains(response.code())) {
                 return Response.Success(response.body()?.results ?: listOf())
             }
             Log.e(Response.LOG_ERROR_TAG, response.message())
@@ -27,7 +27,7 @@ class SwapiManager(private val service: Swapi) : SwapiRepository {
         try {
             val data = characterUrlList.map {
                 val response = service.getCharacterInformation(it)
-                if (response.isSuccessful) {
+                if ((200..299).contains(response.code())) {
                     return@map response.body() ?: People()
                 } else {
                     Log.e(Response.LOG_ERROR_TAG, response.message())
@@ -45,7 +45,7 @@ class SwapiManager(private val service: Swapi) : SwapiRepository {
         try {
             val data = planetUrlList.map {
                 val response = service.getPlanetInformation(it)
-                if (response.isSuccessful) {
+                if ((200..299).contains(response.code())) {
                     return@map response.body() ?: Planet()
                 } else {
                     Log.e(Response.LOG_ERROR_TAG, response.message())
