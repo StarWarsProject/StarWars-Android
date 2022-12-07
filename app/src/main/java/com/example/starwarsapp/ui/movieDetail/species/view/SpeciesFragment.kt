@@ -37,6 +37,12 @@ class SpeciesFragment : Fragment() {
                 viewModel.refreshList(binding.root.context, it, TypeTabs.SPECIES)
             }
         }
+        binding.errorContainer.btnDismiss.setOnClickListener {
+            binding.errorContainer.container.visibility = View.GONE
+        }
+        binding.tvNotSynced.setOnClickListener {
+            binding.tvNotSynced.visibility = View.GONE
+        }
         setObservers()
     }
 
@@ -50,19 +56,19 @@ class SpeciesFragment : Fragment() {
             } else {
                 binding.progressBar.visibility = View.GONE
                 binding.errorContainer.container.visibility = View.GONE
-                (binding.speciesRecycler.adapter as SpecieAdapter).updateList(list)
             }
+            (binding.speciesRecycler.adapter as SpecieAdapter).updateList(list)
+            binding.refreshContainer.isRefreshing = false
         }
         viewModel.dataError.observe(viewLifecycleOwner) { hasError ->
-            binding.progressBar.visibility = View.GONE
             if (hasError) {
                 binding.errorContainer.container.visibility = View.VISIBLE
             } else {
                 binding.errorContainer.container.visibility = View.GONE
             }
+            binding.refreshContainer.isRefreshing = false
         }
         viewModel.syncError.observe(viewLifecycleOwner) { hasError ->
-            binding.progressBar.visibility = View.GONE
             if (hasError) {
                 binding.tvNotSynced.visibility = View.VISIBLE
             } else {
@@ -70,10 +76,5 @@ class SpeciesFragment : Fragment() {
             }
             binding.refreshContainer.isRefreshing = false
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -1,7 +1,7 @@
 package com.example.starwarsapp.ui.home.viewModel
 
 import android.content.Context
-import androidx.lifecycle.LiveData
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,21 +17,27 @@ class MoviesListViewModel
 @Inject
 constructor(private val repository: MovieDataRepository) : ViewModel() {
 
-    var _moviesList: MutableLiveData<List<MovieEntity>> = MutableLiveData()
-    val moviesList: LiveData<List<MovieEntity>> = _moviesList
-    val activeMovie: MutableLiveData<MovieEntity?> = MutableLiveData()
+    companion object {
+        val LOGIDENTIFIER = "MoviesListViewModel"
+    }
+    val moviesList: MutableLiveData<List<MovieEntity>> by lazy {
+        MutableLiveData<List<MovieEntity>>()
+    }
+    val activeMovie: MutableLiveData<MovieEntity?> by lazy {
+        MutableLiveData<MovieEntity?>()
+    }
 
     fun getAllMovies(context: Context) = viewModelScope.launch {
         val moviesResponse = repository.getAllMovies(context)
-        print("getting")
         val data = moviesResponse.data
         if (data != null) {
-            print("is not null")
-            _moviesList.value = data
+            moviesList.value = data
             activeMovie.value = data.first()
             saveMoviesLocally(data)
         } else {
-            print("is null")
+            moviesList.value = listOf()
+            activeMovie.value = null
+            Log.d(LOGIDENTIFIER, "data is null")
         }
     }
 
@@ -41,16 +47,16 @@ constructor(private val repository: MovieDataRepository) : ViewModel() {
 
     fun filterByReleaseDate() {
         val newList = mutableListOf<MovieEntity>()
-        newList.addAll(_moviesList.value ?: listOf())
+        newList.addAll(moviesList.value ?: listOf())
         newList.sortBy { it.releaseDate }
-        _moviesList.value = newList
+        moviesList.value = newList
     }
 
     fun filterByHistory() {
         val newList = mutableListOf<MovieEntity>()
-        newList.addAll(_moviesList.value ?: listOf())
-        newList.sortBy { it.id }
-        _moviesList.value = newList
+        newList.addAll(moviesList.value ?: listOf())
+        newList.sortBy { it.episode_id }
+        moviesList.value = newList
     }
 
     fun updateActiveMovie(movie: MovieEntity) {

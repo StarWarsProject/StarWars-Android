@@ -20,7 +20,7 @@
     <string name="ships">Naves</string>
     <string name="films">Peliculas</string>
     <string name="we_can_t_show_you_any_information_yet_ensure_you_have_internet_connection_and_restart_the_app">No podemos mostrar ninguna información, asegurate que tienes conexión a internet y luego intenta nuevamente</string>
-    <string name="ops_we_can_t_get_the_list_of_movies_right_now">Ops. No podemos obtener la lista de peliculas en este momento</string>
+    <string name="ops_we_can_t_get_the_list_right_now">Ops. No podemos obtener la lista en este momento</string>
     <string name="birth_year">Año de nacimiento:&#160;</string>
     <string name="gender">Género:&#160;</string>
     <string name="climate">Clima:&#160;</string>
@@ -28,6 +28,6 @@
     <string name="notSynced">Hay algunos datos no sincronizados, verifique su conexión a Internet y actualice la lista para obtener la información más reciente</string>
     <string name="clasification">Clasificacion:&#160;</string>
     <string name="language">Idioma:&#160;</string>
-    <string name="manufacturer">Fabricate:&#160;</string>
+    <string name="manufacturer">Fabricante:&#160;</string>
     <string name="crew">Tripulacion:&#160;</string>
 </resources>

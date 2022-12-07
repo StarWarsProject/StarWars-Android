@@ -4,14 +4,19 @@ import com.example.starwarsapp.data.local.db.StarWarsDB
 import com.example.starwarsapp.data.local.interfaces.PlanetLocalRepository
 import com.example.starwarsapp.data.local.models.MoviePlanetsEntity
 import com.example.starwarsapp.data.local.models.PlanetEntity
+import com.example.starwarsapp.data.remote.models.Planet
+import com.example.starwarsapp.utils.ListUtil
 
 class PlanetLocalManager(private val localStarWarsDB: StarWarsDB) : PlanetLocalRepository {
     override suspend fun getPlanetsForMovie(movieId: Int): List<PlanetEntity> {
         return localStarWarsDB.moviePlanetsDao().getPlanets(movieId)
     }
 
-    override suspend fun storePlanetForMovie(planetEntity: PlanetEntity, movieId: Int) {
-        localStarWarsDB.planetDao().addPlanet(planetEntity)
-        localStarWarsDB.moviePlanetsDao().addMoviePlanet(MoviePlanetsEntity(movieId, planetEntity.id))
+    override suspend fun storePlanetForMovie(planetData: Planet) {
+        val planetEnt = planetData.toEntity()
+        localStarWarsDB.planetDao().addPlanet(planetEnt)
+        planetData.films.forEach {
+            localStarWarsDB.moviePlanetsDao().addMoviePlanet(MoviePlanetsEntity(ListUtil.splitToGetIdFromUrl(it).toInt(), planetEnt.id))
+        }
     }
 }

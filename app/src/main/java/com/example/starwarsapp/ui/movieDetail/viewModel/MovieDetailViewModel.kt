@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 enum class TypeTabs {
-    CHARACTERS, PLANETS, SPECIES, SHIPS, VEHICLES
+    CHARACTERS, PLANETS, SPECIES, SHIPS
 }
 
 @HiltViewModel
@@ -55,100 +55,88 @@ constructor(
         selectedMovie.value = result
     }
 
-    fun refreshList(context: Context, movie: MovieEntity, type: TypeTabs) = viewModelScope.launch(Dispatchers.IO) {
-        var data: List<BaseEntity>? = null
-        when (type) {
-            TypeTabs.CHARACTERS -> {
-                data = characterDataRepository.getDataFromInternet(context, movie.characters).data
-                if (data != null) {
-                    withContext(Dispatchers.Main) {
-                        charactersList.value = data as List<CharacterEntity>
+    fun refreshList(context: Context, movie: MovieEntity, type: TypeTabs) =
+        viewModelScope.launch(Dispatchers.IO) {
+            var data: List<BaseEntity>? = null
+            when (type) {
+                TypeTabs.CHARACTERS -> {
+                    data =
+                        characterDataRepository.refreshData(context, movie.characters).data
+                    data?.let {
+                        withContext(Dispatchers.Main) {
+                            charactersList.value = it
+                        }
+                    }
+                }
+                TypeTabs.PLANETS -> {
+                    data = planetDataRepository.refreshData(context, movie.planets).data
+                    data?.let {
+                        withContext(Dispatchers.Main) {
+                            planetsList.value = it
+                        }
+                    }
+                }
+                TypeTabs.SPECIES -> {
+                    data = specieDataRepository.refreshData(context, movie.species).data
+                    data?.let {
+                        withContext(Dispatchers.Main) {
+                            speciesList.value = it
+                        }
+                    }
+                }
+                TypeTabs.SHIPS -> {
+                    data = starshipDataRepository.refreshData(context, movie.starships).data
+                    data?.let {
+                        withContext(Dispatchers.Main) {
+                            starshipsList.value = it
+                        }
                     }
                 }
             }
-            TypeTabs.PLANETS -> {
-                data = planetDataRepository.getDataFromInternet(context, movie.planets).data
-                if (data != null) {
-                    withContext(Dispatchers.Main) {
-                        planetsList.value = data as List<PlanetEntity>
-                    }
-                }
-            }
-            TypeTabs.SPECIES -> {
-                data = specieDataRepository.getDataFromInternet(context, movie.species).data
-                if (data != null) {
-                    withContext(Dispatchers.Main) {
-                        speciesList.value = data as List<SpecieEntity>
-                    }
-                }
-            }
-            TypeTabs.SHIPS -> {
-                data = starshipDataRepository.getDataFromInternet(context, movie.starships).data
-                if (data != null) {
-                    withContext(Dispatchers.Main) {
-                        starshipsList.value = data as List<StarshipEntity>
-                    }
-                }
-            }
-            else -> {}
-        }
-        if (data != null) {
             withContext(Dispatchers.Main) {
-                syncError.value = false
+                data?.let {
+                    syncError.value = false
+                } ?: run {
+                    dataError.value = true
+                }
             }
-            saveDataLocally(data, movie.id, type)
-        } else {
-            dataError.value = true
         }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun saveDataLocally(dataList: List<BaseEntity>, movieId: Int, type: TypeTabs) = viewModelScope.launch {
-        when (type) {
-            TypeTabs.CHARACTERS -> characterDataRepository.storeData(dataList as List<CharacterEntity>, movieId)
-            TypeTabs.PLANETS -> planetDataRepository.storeData(dataList as List<PlanetEntity>, movieId)
-            TypeTabs.SPECIES -> specieDataRepository.storeData(dataList as List<SpecieEntity>, movieId)
-            else -> {}
-        }
-    }
 
     fun syncList(context: Context, movie: MovieEntity, type: TypeTabs) = viewModelScope.launch {
-        var response: List<BaseEntity>?
         var messageError: String? = null
         when (type) {
             TypeTabs.CHARACTERS -> {
-                val result = characterDataRepository.syncData(context, movie.characters, "movie", movie.id)
-                response = result.data
-                messageError = result.message
-                if (response != null) {
-                    charactersList.value = response
+                val result =
+                    characterDataRepository.syncData(context, movie.characters, "movie", movie.id)
+                result.data?.let {
+                    charactersList.value = it
                 }
+                messageError = result.message
             }
             TypeTabs.PLANETS -> {
-                val result = planetDataRepository.syncData(context, movie.planets, "movie", movie.id)
-                response = result.data
-                messageError = result.message
-                if (response != null) {
-                    planetsList.value = response
+                val result =
+                    planetDataRepository.syncData(context, movie.planets, "movie", movie.id)
+                result.data?.let {
+                    planetsList.value = it
                 }
+                messageError = result.message
             }
             TypeTabs.SPECIES -> {
-                val result = specieDataRepository.syncData(context, movie.species, "movie", movie.id)
-                response = result.data
-                messageError = result.message
-                if (response != null) {
-                    speciesList.value = response
+                val result =
+                    specieDataRepository.syncData(context, movie.species, "movie", movie.id)
+                result.data?.let {
+                    speciesList.value = it
                 }
+                messageError = result.message
             }
             TypeTabs.SHIPS -> {
-                val result = starshipDataRepository.syncData(context, movie.starships, "movie", movie.id)
-                response = result.data
-                messageError = result.message
-                if (response != null) {
-                    starshipsList.value = response
+                val result =
+                    starshipDataRepository.syncData(context, movie.starships, "movie", movie.id)
+                result.data?.let {
+                    starshipsList.value = it
                 }
+                messageError = result.message
             }
-            else -> {}
         }
         syncError.value = messageError != null
     }

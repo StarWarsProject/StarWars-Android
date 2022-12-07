@@ -6,5 +6,5 @@ import com.example.starwarsapp.utils.Response
 interface BaseEntityCrud<T> {
     suspend fun getAllLocal(propName: String?, value: Any?): Response<List<T>>
     suspend fun getAllRemote(sourceArrayIds: List<String>): Response<List<IBaseRemoteData>>
-    suspend fun storeSingleEntity(data: T, parentId: Int?): Response<Unit>
+    suspend fun storeSingleEntity(data: IBaseRemoteData): Response<Unit>
 }

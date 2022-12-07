@@ -28,12 +28,8 @@ constructor(
         return swapiRepository.getEntitiesForMovie(sourceArrayIds, People::class.java)
     }
 
-    override suspend fun storeSingleEntity(data: CharacterEntity, parentId: Int?): Response<Unit> {
-        return if (parentId != null) {
-            Response.Success(characterLocalRepository.storeCharacterForMovie(data, parentId))
-        } else {
-            Response.Error("No parent ID")
-        }
+    override suspend fun storeSingleEntity(data: IBaseRemoteData): Response<Unit> {
+        return Response.Success(characterLocalRepository.storeCharacterForMovie(data as People))
     }
 }
 

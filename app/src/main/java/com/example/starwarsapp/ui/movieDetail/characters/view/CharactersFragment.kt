@@ -17,7 +17,6 @@ class CharactersFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: MovieDetailViewModel by activityViewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,6 +36,12 @@ class CharactersFragment : Fragment() {
                 viewModel.refreshList(binding.root.context, it, TypeTabs.CHARACTERS)
             }
         }
+        binding.errorContainer.btnDismiss.setOnClickListener {
+            binding.errorContainer.container.visibility = View.GONE
+        }
+        binding.tvNotSynced.setOnClickListener {
+            binding.tvNotSynced.visibility = View.GONE
+        }
         setObservers()
     }
 
@@ -50,12 +55,11 @@ class CharactersFragment : Fragment() {
             } else {
                 binding.progressBar.visibility = View.GONE
                 binding.errorContainer.container.visibility = View.GONE
-                (binding.charactersRecycler.adapter as CharacterAdapter).updateList(list)
             }
+            (binding.charactersRecycler.adapter as CharacterAdapter).updateList(list)
             binding.refreshContainer.isRefreshing = false
         }
         viewModel.dataError.observe(viewLifecycleOwner) { hasError ->
-            binding.progressBar.visibility = View.GONE
             if (hasError) {
                 binding.errorContainer.container.visibility = View.VISIBLE
             } else {
@@ -64,7 +68,6 @@ class CharactersFragment : Fragment() {
             binding.refreshContainer.isRefreshing = false
         }
         viewModel.syncError.observe(viewLifecycleOwner) { hasError ->
-            binding.progressBar.visibility = View.GONE
             if (hasError) {
                 binding.tvNotSynced.visibility = View.VISIBLE
             } else {
@@ -72,10 +75,5 @@ class CharactersFragment : Fragment() {
             }
             binding.refreshContainer.isRefreshing = false
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

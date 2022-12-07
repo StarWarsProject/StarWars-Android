@@ -1,6 +1,7 @@
 package com.example.starwarsapp.ui.home.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainScreenFragment : Fragment() {
+    companion object {
+        const val LOGIDENTIFIER = "MainScreenFragment"
+    }
     private var _binding: FragmentMainScreenBinding? = null
     private val binding get() = _binding!!
 
@@ -36,9 +40,9 @@ class MainScreenFragment : Fragment() {
 
         cld.observe(this) { isConnected ->
             if (isConnected) {
-                println("Internet Available")
+                Log.d(LOGIDENTIFIER, "Internet Available")
             } else {
-                println("Internet Not Available")
+                Log.d(LOGIDENTIFIER, "Internet Not Available")
             }
         }
     }

@@ -34,6 +34,8 @@ data class Movie(
         val starshipsStr = ListUtil.urlListToJoinedIdString(starships)
         val vehiclesStr = ListUtil.urlListToJoinedIdString(vehicles)
         val speciesStr = ListUtil.urlListToJoinedIdString(species)
-        return MovieEntity(episode_id, title, opening_crawl, director, producer, release_date, charactersStr, planetsStr, starshipsStr, vehiclesStr, speciesStr, Date().time, Date().time)
+        val splitUrl = url.split("/")
+        val id = splitUrl[splitUrl.size - 2]
+        return MovieEntity(id.toInt(), episode_id, title, opening_crawl, director, producer, release_date, charactersStr, planetsStr, starshipsStr, vehiclesStr, speciesStr, Date().time, Date().time)
     }
 }

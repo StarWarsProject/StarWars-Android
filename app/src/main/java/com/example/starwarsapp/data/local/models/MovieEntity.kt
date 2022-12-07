@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class MovieEntity(
     @PrimaryKey
     override val id: Int,
+    val episode_id: Int,
     val title: String,
     val openingCrawl: String,
     val director: String,

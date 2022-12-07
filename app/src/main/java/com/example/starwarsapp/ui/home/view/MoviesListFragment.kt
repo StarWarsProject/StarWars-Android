@@ -45,9 +45,10 @@ class MoviesListFragment : Fragment(), MovieAdapter.IMovieListener {
             if (it.isEmpty()) {
                 binding.errorContainer.container.visibility = View.VISIBLE
             } else {
-                binding.errorContainer.container.visibility = View.GONE
                 (binding.moviesRecycler.adapter as MovieAdapter).updateList(it.toMutableList())
+                binding.errorContainer.container.visibility = View.GONE
             }
+            binding.progressBar.visibility = View.GONE
         }
 
         viewModel.getAllMovies(binding.root.context)
