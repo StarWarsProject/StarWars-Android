@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.starwarsapp.databinding.FragmentPlanetsBinding
 import com.example.starwarsapp.ui.movieDetail.adapters.PlanetAdapter
 import com.example.starwarsapp.ui.movieDetail.viewModel.MovieDetailViewModel
+import com.example.starwarsapp.ui.movieDetail.viewModel.TypeTabs
 
 class PlanetsFragment : Fragment() {
     private var _binding: FragmentPlanetsBinding? = null
@@ -32,16 +33,19 @@ class PlanetsFragment : Fragment() {
         binding.tvNotSynced.visibility = View.GONE
         binding.refreshContainer.setOnRefreshListener {
             viewModel.selectedMovie.value?.let {
-                viewModel.refreshPlanetsList(binding.root.context, it)
+                viewModel.refreshList(binding.root.context, it, TypeTabs.PLANETS)
             }
         }
         setObservers()
         viewModel.selectedMovie.value?.let {
-            viewModel.syncPlanetsList(binding.root.context, it)
+            viewModel.syncList(binding.root.context, it, TypeTabs.PLANETS)
         }
     }
 
     private fun setObservers() {
+        viewModel.selectedMovie.observe(viewLifecycleOwner) {
+            viewModel.syncList(binding.root.context, it, TypeTabs.PLANETS)
+        }
         viewModel.planetsList.observe(viewLifecycleOwner) { list ->
             if (list.isEmpty()) {
                 binding.errorContainer.container.visibility = View.VISIBLE
@@ -50,6 +54,7 @@ class PlanetsFragment : Fragment() {
                 binding.errorContainer.container.visibility = View.GONE
                 (binding.planetsRecycler.adapter as PlanetAdapter).updateList(list)
             }
+            binding.refreshContainer.isRefreshing = false
         }
         viewModel.dataError.observe(viewLifecycleOwner) { hasError ->
             binding.progressBar.visibility = View.GONE
@@ -58,6 +63,7 @@ class PlanetsFragment : Fragment() {
             } else {
                 binding.errorContainer.container.visibility = View.GONE
             }
+            binding.refreshContainer.isRefreshing = false
         }
         viewModel.syncError.observe(viewLifecycleOwner) { hasError ->
             binding.progressBar.visibility = View.GONE

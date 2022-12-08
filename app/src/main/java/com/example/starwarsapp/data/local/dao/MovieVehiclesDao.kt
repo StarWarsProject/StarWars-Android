@@ -8,5 +8,5 @@ import com.example.starwarsapp.data.local.models.MovieVehiclesEntity
 @Dao
 interface MovieVehiclesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addMovieVehicle(movieVehiclesEntity: MovieVehiclesEntity)
+    suspend fun addMovieVehicle(movieVehiclesEntity: MovieVehiclesEntity)
 }

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class SpecieEntity(
     @PrimaryKey
-    val id: Int,
+    override val id: Int,
     val name: String,
     val description: String,
     val image: String,
@@ -15,4 +15,4 @@ data class SpecieEntity(
     val classification: String,
     val createdAt: Long,
     val updatedAt: Long
-)
+) : BaseEntity

@@ -10,10 +10,10 @@ import com.example.starwarsapp.data.local.models.MovieCharactersEntity
 @Dao
 interface MovieCharactersDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addMovieCharacter(movieCharactersEntity: MovieCharactersEntity)
+    suspend fun addMovieCharacter(movieCharactersEntity: MovieCharactersEntity)
 
     @Query(
         "SELECT a.* FROM CharacterEntity as a, MovieCharactersEntity as b WHERE a.id = b.characterId " + "AND b.movieId = :movieId"
     )
-    fun getCharacters(movieId: Int): List<CharacterEntity>
+    suspend fun getCharacters(movieId: Int): List<CharacterEntity>
 }

@@ -19,4 +19,4 @@ data class MovieEntity(
     val species: String,
     val createdAt: Long,
     val updatedAt: Long
-) : java.io.Serializable, BaseEntity(id = id)
+) : java.io.Serializable, BaseEntity

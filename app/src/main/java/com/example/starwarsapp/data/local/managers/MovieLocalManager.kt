@@ -5,15 +5,15 @@ import com.example.starwarsapp.data.local.interfaces.MovieLocalRepository
 import com.example.starwarsapp.data.local.models.MovieEntity
 
 class MovieLocalManager(private val localStarWarsDB: StarWarsDB) : MovieLocalRepository {
-    override fun addLocalMovies(movieEntity: MovieEntity) {
+    override suspend fun addLocalMovies(movieEntity: MovieEntity) {
         localStarWarsDB.movieDao().addMovie(movieEntity)
     }
 
-    override fun getLocalMovies(): List<MovieEntity> {
+    override suspend fun getLocalMovies(): List<MovieEntity> {
         return localStarWarsDB.movieDao().getAllMovies()
     }
 
-    override fun getSingleMovie(movieId: Int): MovieEntity {
+    override suspend fun getSingleMovie(movieId: Int): MovieEntity {
         return localStarWarsDB.movieDao().getSingleMovie(movieId)
     }
 }

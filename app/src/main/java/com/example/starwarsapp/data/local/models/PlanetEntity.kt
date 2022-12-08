@@ -17,4 +17,4 @@ data class PlanetEntity(
     val population: String,
     val createdAt: Long,
     val updatedAt: Long
-) : BaseEntity(id = id)
+) : BaseEntity

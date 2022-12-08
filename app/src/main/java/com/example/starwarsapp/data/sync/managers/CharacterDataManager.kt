@@ -5,6 +5,7 @@ import com.example.starwarsapp.data.local.interfaces.CharacterLocalRepository
 import com.example.starwarsapp.data.local.models.CharacterEntity
 import com.example.starwarsapp.data.remote.interfaces.IBaseRemoteData
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
+import com.example.starwarsapp.data.remote.models.People
 import com.example.starwarsapp.data.sync.interfaces.BaseEntityCrud
 import com.example.starwarsapp.utils.Response
 import javax.inject.Inject
@@ -15,7 +16,7 @@ constructor(
     private val swapiRepository: SwapiRepository,
     private val characterLocalRepository: CharacterLocalRepository
 ) : BaseEntityCrud<CharacterEntity> {
-    override fun getAllLocal(propName: String?, value: Any?): Response<List<CharacterEntity>> {
+    override suspend fun getAllLocal(propName: String?, value: Any?): Response<List<CharacterEntity>> {
         return if (propName == "movie") {
             Response.Success(characterLocalRepository.getCharactersForMovie(value as Int))
         } else {
@@ -24,10 +25,10 @@ constructor(
     }
 
     override suspend fun getAllRemote(sourceArrayIds: List<String>): Response<List<IBaseRemoteData>> {
-        return swapiRepository.getCharactersForMovie(sourceArrayIds)
+        return swapiRepository.getEntitiesForMovie(sourceArrayIds, People::class.java)
     }
 
-    override fun storeSingleEntity(data: CharacterEntity, parentId: Int?): Response<Unit> {
+    override suspend fun storeSingleEntity(data: CharacterEntity, parentId: Int?): Response<Unit> {
         return if (parentId != null) {
             Response.Success(characterLocalRepository.storeCharacterForMovie(data, parentId))
         } else {

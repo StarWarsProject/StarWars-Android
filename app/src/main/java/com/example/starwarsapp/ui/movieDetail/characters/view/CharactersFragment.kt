@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.starwarsapp.databinding.FragmentCharactersBinding
 import com.example.starwarsapp.ui.movieDetail.adapters.CharacterAdapter
 import com.example.starwarsapp.ui.movieDetail.viewModel.MovieDetailViewModel
+import com.example.starwarsapp.ui.movieDetail.viewModel.TypeTabs
 
 class CharactersFragment : Fragment() {
     private var _binding: FragmentCharactersBinding? = null
@@ -33,16 +34,16 @@ class CharactersFragment : Fragment() {
         binding.tvNotSynced.visibility = View.GONE
         binding.refreshContainer.setOnRefreshListener {
             viewModel.selectedMovie.value?.let {
-                viewModel.refreshCharactersList(binding.root.context, it)
+                viewModel.refreshList(binding.root.context, it, TypeTabs.CHARACTERS)
             }
         }
         setObservers()
-        viewModel.selectedMovie.value?.let {
-            viewModel.syncCharactersList(binding.root.context, it)
-        }
     }
 
     private fun setObservers() {
+        viewModel.selectedMovie.observe(viewLifecycleOwner) {
+            viewModel.syncList(binding.root.context, it, TypeTabs.CHARACTERS)
+        }
         viewModel.charactersList.observe(viewLifecycleOwner) { list ->
             if (list.isEmpty()) {
                 binding.errorContainer.container.visibility = View.VISIBLE
