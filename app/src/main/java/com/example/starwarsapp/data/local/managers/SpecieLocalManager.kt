@@ -19,4 +19,8 @@ class SpecieLocalManager(private val localStarWarsDB: StarWarsDB) : SpecieLocalR
             localStarWarsDB.movieSpeciesDao().addMovieSpecie(MovieSpeciesEntity(ListUtil.splitToGetIdFromUrl(it).toInt(), specieEnt.id))
         }
     }
+
+    override suspend fun removeSpecieFromMovie(specieId: Int, movieId: Int) {
+        localStarWarsDB.movieSpeciesDao().removeSpecieFromMovie(specieId, movieId)
+    }
 }

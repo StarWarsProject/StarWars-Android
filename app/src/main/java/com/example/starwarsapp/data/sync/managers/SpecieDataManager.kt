@@ -31,6 +31,10 @@ constructor(
     override suspend fun storeSingleEntity(data: IBaseRemoteData): Response<Unit> {
         return Response.Success(specieLocalRepository.storeSpecieForMovie(data as Specie))
     }
+
+    override suspend fun removeRelationWithParent(entityId: Int, parentId: Int): Response<Unit> {
+        return Response.Success(specieLocalRepository.removeSpecieFromMovie(entityId, parentId))
+    }
 }
 
 class SpecieDataManager

@@ -16,4 +16,9 @@ interface MovieSpeciesDao {
         "SELECT a.* FROM SpecieEntity as a, MovieSpeciesEntity as b WHERE a.id = b.specieId " + "AND b.movieId = :movieId"
     )
     suspend fun getSpecies(movieId: Int): List<SpecieEntity>
+
+    @Query(
+        "DELETE FROM MovieSpeciesEntity WHERE movieId = :movieId " + "AND specieId = :specieId"
+    )
+    suspend fun removeSpecieFromMovie(specieId: Int, movieId: Int)
 }

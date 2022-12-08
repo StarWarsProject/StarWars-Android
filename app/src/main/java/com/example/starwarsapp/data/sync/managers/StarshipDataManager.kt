@@ -31,6 +31,10 @@ constructor(
     override suspend fun storeSingleEntity(data: IBaseRemoteData): Response<Unit> {
         return Response.Success(starshipLocalRepository.storeStarshipForMovie(data as Starship))
     }
+
+    override suspend fun removeRelationWithParent(entityId: Int, parentId: Int): Response<Unit> {
+        return Response.Success(starshipLocalRepository.removeStarshipFromMovie(entityId, parentId))
+    }
 }
 
 class StarshipDataManager

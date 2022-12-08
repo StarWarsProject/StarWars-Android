@@ -19,4 +19,8 @@ class PlanetLocalManager(private val localStarWarsDB: StarWarsDB) : PlanetLocalR
             localStarWarsDB.moviePlanetsDao().addMoviePlanet(MoviePlanetsEntity(ListUtil.splitToGetIdFromUrl(it).toInt(), planetEnt.id))
         }
     }
+
+    override suspend fun removePlanetFromMovie(planetId: Int, movieId: Int) {
+        localStarWarsDB.moviePlanetsDao().removePlanetFromMovie(planetId, movieId)
+    }
 }

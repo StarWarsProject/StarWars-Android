@@ -19,4 +19,8 @@ class StarshipLocalManager(private val localStarWarsDB: StarWarsDB) : StarshipLo
             localStarWarsDB.movieStarshipDao().addMovieStarship(MovieStarshipsEntity(ListUtil.splitToGetIdFromUrl(it).toInt(), starshipEnt.id))
         }
     }
+
+    override suspend fun removeStarshipFromMovie(starshipId: Int, movieId: Int) {
+        localStarWarsDB.movieStarshipDao().removeStarshipFromMovie(starshipId, movieId)
+    }
 }

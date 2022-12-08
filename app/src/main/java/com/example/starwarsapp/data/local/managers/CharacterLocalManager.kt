@@ -19,4 +19,8 @@ class CharacterLocalManager(private val localStarWarsDB: StarWarsDB) : Character
             localStarWarsDB.movieCharactersDao().addMovieCharacter(MovieCharactersEntity(ListUtil.splitToGetIdFromUrl(it).toInt(), characterEnt.id))
         }
     }
+
+    override suspend fun removeCharacterFromMovie(charId: Int, movieId: Int) {
+        localStarWarsDB.movieCharactersDao().removeCharacterFromMovie(charId, movieId)
+    }
 }

@@ -63,9 +63,13 @@ open class BaseDataManager<T : BaseEntity> (
             val entitiesIds = currentEntities.map { it.id.toString() }
             val missingIds = currentEntitiesIds.minus(entitiesIds.toSet())
             Log.d("some", missingIds.toString())
+            Log.d("some", "missingIds.toString()")
             val targetIds = if (currentEntities.size < currentEntitiesIds.count()) {
                 missingIds.joinToString("@")
             } else {
+                currentEntitiesIds.forEach {
+                    baseCrudOperations.removeRelationWithParent(it.toInt(), filterValue.toString().toInt())
+                }
                 currentEntitiesIds.joinToString("@")
             }
             var missingEntities = listOf<T>()
