@@ -61,6 +61,7 @@ class CharactersFragment : Fragment() {
         }
         viewModel.dataError.observe(viewLifecycleOwner) { hasError ->
             if (hasError) {
+                binding.progressBar.visibility = View.GONE
                 binding.errorContainer.container.visibility = View.VISIBLE
             } else {
                 binding.errorContainer.container.visibility = View.GONE
@@ -69,6 +70,7 @@ class CharactersFragment : Fragment() {
         }
         viewModel.syncError.observe(viewLifecycleOwner) { hasError ->
             if (hasError) {
+                binding.progressBar.visibility = View.GONE
                 binding.tvNotSynced.visibility = View.VISIBLE
             } else {
                 binding.tvNotSynced.visibility = View.GONE

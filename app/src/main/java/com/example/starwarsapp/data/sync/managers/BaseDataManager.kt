@@ -47,7 +47,7 @@ open class BaseDataManager<T : BaseEntity> (
     }
 
     override suspend fun storeData(dataList: List<IBaseRemoteData>): Response<Unit> {
-        Log.d("someeee", dataList.count().toString())
+        Log.d("someeee", dataList.size.toString())
         dataList.forEach {
             baseCrudOperations.storeSingleEntity(it)
         }
@@ -56,21 +56,18 @@ open class BaseDataManager<T : BaseEntity> (
 
     override suspend fun syncData(context: Context, idsString: String, filterPropertyName: String?, filterValue: Any?): Response<List<T>> {
         val currentEntities = getEntitiesLocally(filterPropertyName, filterValue).data ?: listOf()
-        val currentEntitiesIds = ListUtil.joinedIdStringToArray(idsString)
-        Log.d("some", currentEntities.size.toString())
-        Log.d("some", currentEntitiesIds.count().toString())
-        if (currentEntities.size != currentEntitiesIds.count()) {
-            val entitiesIds = currentEntities.map { it.id.toString() }
-            val missingIds = currentEntitiesIds.minus(entitiesIds.toSet())
-            Log.d("some", missingIds.toString())
-            Log.d("some", "missingIds.toString()")
-            val targetIds = if (currentEntities.size < currentEntitiesIds.count()) {
+        val idsArray = ListUtil.joinedIdStringToArray(idsString)
+        val entitiesIds = currentEntities.map { it.id.toString() }
+        val missingIds = idsArray.minus(entitiesIds.toSet())
+        if (currentEntities.size != idsArray.size || missingIds.isNotEmpty()) {
+            val targetIds = if (currentEntities.size < idsArray.size) {
                 missingIds.joinToString("@")
             } else {
-                currentEntitiesIds.forEach {
+                val outdatedIds = entitiesIds.minus(idsArray.toSet())
+                outdatedIds.forEach {
                     baseCrudOperations.removeRelationWithParent(it.toInt(), filterValue.toString().toInt())
                 }
-                currentEntitiesIds.joinToString("@")
+                idsArray.joinToString("@")
             }
             var missingEntities = listOf<T>()
             val missingData = getDataFromInternet(context, targetIds)
@@ -79,7 +76,7 @@ open class BaseDataManager<T : BaseEntity> (
                 missingEntities = data.map { it.toEntity() as T }
             }
             if (missingEntities.isNotEmpty()) {
-                return if (currentEntities.size < currentEntitiesIds.count()) {
+                return if (currentEntities.size < idsArray.size) {
                     Response.Success(currentEntities + (missingEntities))
                 } else {
                     Response.Success(missingEntities)

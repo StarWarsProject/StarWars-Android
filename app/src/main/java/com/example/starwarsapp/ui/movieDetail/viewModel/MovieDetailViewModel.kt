@@ -96,6 +96,7 @@ constructor(
             withContext(Dispatchers.Main) {
                 data?.let {
                     syncError.value = false
+                    syncList(context, movie, type)
                 } ?: run {
                     dataError.value = true
                 }
