@@ -28,12 +28,12 @@ constructor(
         return swapiRepository.getEntitiesForMovie(sourceArrayIds, Planet::class.java)
     }
 
-    override suspend fun storeSingleEntity(data: PlanetEntity, parentId: Int?): Response<Unit> {
-        return if (parentId != null) {
-            Response.Success(planetLocalRepository.storePlanetForMovie(data, parentId))
-        } else {
-            Response.Error("No parent ID")
-        }
+    override suspend fun storeSingleEntity(data: IBaseRemoteData): Response<Unit> {
+        return Response.Success(planetLocalRepository.storePlanetForMovie(data as Planet))
+    }
+
+    override suspend fun removeRelationWithParent(entityId: Int, parentId: Int): Response<Unit> {
+        return Response.Success(planetLocalRepository.removePlanetFromMovie(entityId, parentId))
     }
 }
 

@@ -36,6 +36,12 @@ class ShipsFragment : Fragment() {
                 viewModel.refreshList(binding.root.context, it, TypeTabs.SHIPS)
             }
         }
+        binding.errorContainer.btnDismiss.setOnClickListener {
+            binding.errorContainer.container.visibility = View.GONE
+        }
+        binding.tvNotSynced.setOnClickListener {
+            binding.tvNotSynced.visibility = View.GONE
+        }
         setObservers()
     }
     private fun setObservers() {
@@ -48,19 +54,19 @@ class ShipsFragment : Fragment() {
             } else {
                 binding.progressBar.visibility = View.GONE
                 binding.errorContainer.container.visibility = View.GONE
-                (binding.shipsRecycler.adapter as StarshipAdapter).updateList(list)
             }
+            (binding.shipsRecycler.adapter as StarshipAdapter).updateList(list)
+            binding.refreshContainer.isRefreshing = false
         }
         viewModel.dataError.observe(viewLifecycleOwner) { hasError ->
-            binding.progressBar.visibility = View.GONE
             if (hasError) {
                 binding.errorContainer.container.visibility = View.VISIBLE
             } else {
                 binding.errorContainer.container.visibility = View.GONE
             }
+            binding.refreshContainer.isRefreshing = false
         }
         viewModel.syncError.observe(viewLifecycleOwner) { hasError ->
-            binding.progressBar.visibility = View.GONE
             if (hasError) {
                 binding.tvNotSynced.visibility = View.VISIBLE
             } else {
@@ -68,10 +74,5 @@ class ShipsFragment : Fragment() {
             }
             binding.refreshContainer.isRefreshing = false
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

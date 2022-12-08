@@ -42,10 +42,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/movie_item" />
-
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.Holo.ProgressBar.Large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"/>
     <include
         android:id="@+id/error_container"
         layout="@layout/error_container"/>
-
 
 </FrameLayout>

@@ -6,7 +6,10 @@
     android:orientation="vertical"
     android:visibility="gone"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_shadow"
+    android:layout_gravity="center"
+    >
 
     <ImageView
         android:layout_width="wrap_content"
@@ -18,7 +21,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/ops_we_can_t_get_the_list_of_movies_right_now"
+        android:text="@string/ops_we_can_t_get_the_list_right_now"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_dismiss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok"/>
 
 </LinearLayout>
