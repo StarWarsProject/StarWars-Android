@@ -1,16 +1,14 @@
 package com.example.starwarsapp.ui.movieDetail.viewModel
 
 import android.content.Context
-import androidx.lifecycle.Observer
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.starwarsapp.data.local.models.CharacterEntity
 import com.example.starwarsapp.data.source.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import junit.framework.TestCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.*
+import kotlinx.coroutines.test.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -36,15 +34,16 @@ class MovieDetailViewModelTest : TestCase() {
     private lateinit var context: Context
 
     @Before
-    public override fun setUp() {
+    public override fun setUp() = runTest {
         super.setUp()
         hiltRule.inject()
+        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
         fakeCharacterDataManager = FakeCharacterDataManager()
         fakeMovieDataManager = FakeMovieDataManager()
         fakePlanetDataManager = FakePlanetDataManager()
         fakeSpecieDataManager = FakeSpecieDataManager()
         fakeStarshipDataManager = FakeStarshipDataManager()
-        viewModel = MovieDetailViewModel(fakeCharacterDataManager, fakeMovieDataManager, fakePlanetDataManager, fakeSpecieDataManager, fakeStarshipDataManager)
+        viewModel = MovieDetailViewModel(fakeCharacterDataManager, fakeMovieDataManager, fakePlanetDataManager, fakeSpecieDataManager, fakeStarshipDataManager, testDispatcher)
         context = InstrumentationRegistry.getInstrumentation().context
     }
 
@@ -55,22 +54,51 @@ class MovieDetailViewModelTest : TestCase() {
     }
 
     @Test
-    fun `When select Character tab it sets the charactersList with the result`() = runTest {
-        // runBlocking() {
-        val observer = Observer<List<CharacterEntity>> {}
+    fun `When refresh Character tab it gets the data from internet and save it, then sets the charactersList with the result`() = runTest {
+        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcher)
         try {
-            viewModel.charactersList.observeForever(observer)
             viewModel.refreshList(context, FakeData.movie1, TypeTabs.CHARACTERS)
-            // assertNotNull(viewModel.charactersList.value)
-            // withContext(Dispatchers.Main) {
-            val value = viewModel.charactersList.getOrAwaitValue()
-            assertNotNull(value)
-            // }
-            // assertEquals(viewModel.charactersList.value, FakeData.characters)
+            assertEquals(FakeData.characters, viewModel.charactersList.value)
         } finally {
-            viewModel.charactersList.removeObserver(observer)
+            Dispatchers.resetMain()
         }
-        // }
+    }
+
+    @Test
+    fun `When refresh Planet tab it gets the data from internet and save it, then sets the planetsList with the result`() = runTest {
+        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcher)
+        try {
+            viewModel.refreshList(context, FakeData.movie1, TypeTabs.PLANETS)
+            assertEquals(FakeData.planets, viewModel.planetsList.value)
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun `When refresh Specie tab it gets the data from internet and save it, then sets the speciesList with the result`() = runTest {
+        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcher)
+        try {
+            viewModel.refreshList(context, FakeData.movie1, TypeTabs.SPECIES)
+            assertEquals(FakeData.species, viewModel.speciesList.value)
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun `When refresh Starship tab it gets the data from internet and save it, then sets the starshipsList with the result`() = runTest {
+        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcher)
+        try {
+            viewModel.refreshList(context, FakeData.movie1, TypeTabs.SHIPS)
+            assertEquals(FakeData.starships, viewModel.starshipsList.value)
+        } finally {
+            Dispatchers.resetMain()
+        }
     }
 
     @Test
