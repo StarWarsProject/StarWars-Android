@@ -14,15 +14,18 @@ open class BaseDataManager<T : BaseEntity> (
 ) : BaseDataRepository<T> {
     override suspend fun getEntitiesLocally(byPropertyName: String?, value: Any?): Response<List<T>> {
         Log.d("baseMan", "from db")
-        val localData = baseCrudOperations.getAllLocal(byPropertyName, value).data
-        return if (localData != null) {
-            if (localData.isEmpty()) {
-                Response.Error(Response.NO_DATA_AVAILABLE)
-            } else {
-                Response.Success(localData)
+        return when (val response = baseCrudOperations.getAllLocal(byPropertyName, value)) {
+            is Response.Error -> {
+                val localData = response.data!!
+                if (localData.isEmpty()) {
+                    Response.Error(Response.NO_DATA_AVAILABLE)
+                } else {
+                    Response.Success(localData)
+                }
             }
-        } else {
-            Response.Error(Response.DATABASE_ERROR)
+            is Response.Success -> {
+                Response.Error(Response.DATABASE_ERROR)
+            }
         }
     }
 
@@ -30,15 +33,16 @@ open class BaseDataManager<T : BaseEntity> (
         Log.d("baseMan", "from internet")
         return if (Utils.checkForInternet(context)) {
             val dataIdsList = ListUtil.joinedIdStringToArray(sourceStringIds)
-            val remoteDataResponse = baseCrudOperations.getAllRemote(dataIdsList)
-            val data = remoteDataResponse.data
-            if (data != null) {
-                val currentEntities = data.map {
-                    it.toEntity() as T
+            when (val remoteDataResponse = baseCrudOperations.getAllRemote(dataIdsList)) {
+                is Response.Error -> {
+                    return Response.Error(Response.NO_DATA_AVAILABLE)
                 }
-                return Response.Success(currentEntities)
-            } else {
-                Response.Error(Response.NO_DATA_AVAILABLE)
+                is Response.Success -> {
+                    val data = remoteDataResponse.data!!.map {
+                        it.toEntity() as T
+                    }
+                    return Response.Success(data)
+                }
             }
         } else {
             Response.Error(Response.NO_INTERNET)
@@ -65,18 +69,22 @@ open class BaseDataManager<T : BaseEntity> (
             } else {
                 currentEntitiesIds.joinToString("@")
             }
-            val missingEntities = getDataFromInternet(context, targetIds)
-            if (missingEntities.data != null) {
-                if (filterValue != null) {
-                    storeData(missingEntities.data, filterValue as Int)
+            when (val missingEntities = getDataFromInternet(context, targetIds)) {
+                is Response.Error -> {
+                    return Response.Error(Response.NO_INTERNET, currentEntities)
                 }
-                return if (currentEntities.size < currentEntitiesIds.count()) {
-                    Response.Success(currentEntities + (missingEntities.data))
-                } else {
-                    Response.Success(missingEntities.data)
+                is Response.Success -> {
+                    val data = missingEntities.data!!
+                    if (filterValue != null) {
+                        storeData(data, filterValue as Int)
+                    }
+                    return if (currentEntities.size < currentEntitiesIds.count()) {
+                        Response.Success(currentEntities + (missingEntities.data))
+                    } else {
+                        Response.Success(missingEntities.data)
+                    }
                 }
             }
-            return Response.Error(Response.NO_INTERNET, currentEntities)
         } else {
             return Response.Success(currentEntities)
         }
