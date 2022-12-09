@@ -19,7 +19,7 @@ open class BaseDataManager<T : BaseEntity> (
     override suspend fun getEntitiesLocally(byPropertyName: String?, value: Any?): Response<List<T>> {
         Log.d(LOGIDENTIFIER, "from db")
         return when (val response = baseCrudOperations.getAllLocal(byPropertyName, value)) {
-            is Response.Error -> {
+            is Response.Success -> {
                 val localData = response.data!!
                 if (localData.isEmpty()) {
                     Response.Error(Response.NO_DATA_AVAILABLE)
@@ -27,7 +27,7 @@ open class BaseDataManager<T : BaseEntity> (
                     Response.Success(localData)
                 }
             }
-            is Response.Success -> {
+            is Response.Error -> {
                 Response.Error(Response.DATABASE_ERROR)
             }
         }
@@ -67,6 +67,9 @@ open class BaseDataManager<T : BaseEntity> (
         val idsArray = ListUtil.joinedIdStringToArray(idsString)
         val entitiesIds = currentEntities.map { it.id.toString() }
         val missingIds = idsArray.minus(entitiesIds.toSet())
+        Log.d("someeee", currentEntities.size.toString())
+        Log.d("someeee", idsArray.size.toString())
+        Log.d("someeee", (currentEntities.size != idsArray.size).toString())
         if (currentEntities.size != idsArray.size || missingIds.isNotEmpty()) {
             val targetIds = if (currentEntities.size < idsArray.size) {
                 missingIds.joinToString("@")
@@ -99,7 +102,6 @@ open class BaseDataManager<T : BaseEntity> (
                     }
                 }
             }
-            return Response.Error(Response.NO_INTERNET, currentEntities)
         } else {
             return Response.Success(currentEntities)
         }
