@@ -9,6 +9,7 @@ sealed class Response<T>(
         const val DATABASE_ERROR = "DB Error"
         const val NO_INTERNET = "No internet"
         const val LOG_ERROR_TAG = "LOG_error_tag"
+        const val CAN_NOT_REFRESH = "Can not Refresh"
     }
     class Success<T>(data: T) : Response<T>(data)
     class Error<T>(message: String, data: T? = null) : Response<T>(data, message)

@@ -36,10 +36,13 @@ class PlanetsFragment : Fragment() {
                 viewModel.refreshList(binding.root.context, it, TypeTabs.PLANETS)
             }
         }
-        setObservers()
-        viewModel.selectedMovie.value?.let {
-            viewModel.syncList(binding.root.context, it, TypeTabs.PLANETS)
+        binding.errorContainer.btnDismiss.setOnClickListener {
+            binding.errorContainer.container.visibility = View.GONE
         }
+        binding.tvNotSynced.setOnClickListener {
+            binding.tvNotSynced.visibility = View.GONE
+        }
+        setObservers()
     }
 
     private fun setObservers() {
@@ -52,12 +55,11 @@ class PlanetsFragment : Fragment() {
             } else {
                 binding.progressBar.visibility = View.GONE
                 binding.errorContainer.container.visibility = View.GONE
-                (binding.planetsRecycler.adapter as PlanetAdapter).updateList(list)
             }
+            (binding.planetsRecycler.adapter as PlanetAdapter).updateList(list)
             binding.refreshContainer.isRefreshing = false
         }
         viewModel.dataError.observe(viewLifecycleOwner) { hasError ->
-            binding.progressBar.visibility = View.GONE
             if (hasError) {
                 binding.errorContainer.container.visibility = View.VISIBLE
             } else {
@@ -66,7 +68,6 @@ class PlanetsFragment : Fragment() {
             binding.refreshContainer.isRefreshing = false
         }
         viewModel.syncError.observe(viewLifecycleOwner) { hasError ->
-            binding.progressBar.visibility = View.GONE
             if (hasError) {
                 binding.tvNotSynced.visibility = View.VISIBLE
             } else {
@@ -74,10 +75,5 @@ class PlanetsFragment : Fragment() {
             }
             binding.refreshContainer.isRefreshing = false
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -3,6 +3,7 @@ package com.example.starwarsapp.data.sync.managers
 import android.content.Context
 import android.util.Log
 import com.example.starwarsapp.data.local.models.BaseEntity
+import com.example.starwarsapp.data.remote.interfaces.IBaseRemoteData
 import com.example.starwarsapp.data.sync.interfaces.BaseDataRepository
 import com.example.starwarsapp.data.sync.interfaces.BaseEntityCrud
 import com.example.starwarsapp.utils.ListUtil
@@ -12,8 +13,11 @@ import com.example.starwarsapp.utils.Utils
 open class BaseDataManager<T : BaseEntity> (
     private val baseCrudOperations: BaseEntityCrud<T>
 ) : BaseDataRepository<T> {
+    companion object {
+        const val LOGIDENTIFIER = "BaseDataManager"
+    }
     override suspend fun getEntitiesLocally(byPropertyName: String?, value: Any?): Response<List<T>> {
-        Log.d("baseMan", "from db")
+        Log.d(LOGIDENTIFIER, "from db")
         return when (val response = baseCrudOperations.getAllLocal(byPropertyName, value)) {
             is Response.Error -> {
                 val localData = response.data!!
@@ -29,8 +33,8 @@ open class BaseDataManager<T : BaseEntity> (
         }
     }
 
-    override suspend fun getDataFromInternet(context: Context, sourceStringIds: String): Response<List<T>> {
-        Log.d("baseMan", "from internet")
+    override suspend fun getDataFromInternet(context: Context, sourceStringIds: String): Response<List<IBaseRemoteData>> {
+        Log.d(LOGIDENTIFIER, "from internet")
         return if (Utils.checkForInternet(context)) {
             val dataIdsList = ListUtil.joinedIdStringToArray(sourceStringIds)
             when (val remoteDataResponse = baseCrudOperations.getAllRemote(dataIdsList)) {
@@ -38,10 +42,11 @@ open class BaseDataManager<T : BaseEntity> (
                     return Response.Error(Response.NO_DATA_AVAILABLE)
                 }
                 is Response.Success -> {
-                    val data = remoteDataResponse.data!!.map {
-                        it.toEntity() as T
+                    remoteDataResponse.data?.let {
+                        return Response.Success(it)
+                    } ?: run {
+                        return Response.Error(Response.NO_DATA_AVAILABLE)
                     }
-                    return Response.Success(data)
                 }
             }
         } else {
@@ -49,44 +54,64 @@ open class BaseDataManager<T : BaseEntity> (
         }
     }
 
-    override suspend fun storeData(dataList: List<T>, parentId: Int?): Response<Unit> {
+    override suspend fun storeData(dataList: List<IBaseRemoteData>): Response<Unit> {
+        Log.d("someeee", dataList.size.toString())
         dataList.forEach {
-            if (parentId != null) {
-                baseCrudOperations.storeSingleEntity(it, parentId)
-            }
+            baseCrudOperations.storeSingleEntity(it)
         }
         return Response.Success(Unit)
     }
 
     override suspend fun syncData(context: Context, idsString: String, filterPropertyName: String?, filterValue: Any?): Response<List<T>> {
         val currentEntities = getEntitiesLocally(filterPropertyName, filterValue).data ?: listOf()
-        val currentEntitiesIds = ListUtil.joinedIdStringToArray(idsString)
-        if (currentEntities.size != currentEntitiesIds.count()) {
-            val entitiesIds = currentEntities.map { it.id.toString() }
-            val missingIds = currentEntitiesIds.minus(entitiesIds.toSet())
-            val targetIds = if (currentEntities.size < currentEntitiesIds.count()) {
+        val idsArray = ListUtil.joinedIdStringToArray(idsString)
+        val entitiesIds = currentEntities.map { it.id.toString() }
+        val missingIds = idsArray.minus(entitiesIds.toSet())
+        if (currentEntities.size != idsArray.size || missingIds.isNotEmpty()) {
+            val targetIds = if (currentEntities.size < idsArray.size) {
                 missingIds.joinToString("@")
             } else {
-                currentEntitiesIds.joinToString("@")
+                val outdatedIds = entitiesIds.minus(idsArray.toSet())
+                outdatedIds.forEach {
+                    baseCrudOperations.removeRelationWithParent(it.toInt(), filterValue.toString().toInt())
+                }
+                idsArray.joinToString("@")
             }
-            when (val missingEntities = getDataFromInternet(context, targetIds)) {
+            var missingEntities = listOf<T>()
+            val missingData = getDataFromInternet(context, targetIds)
+            when (missingData) {
                 is Response.Error -> {
-                    return Response.Error(Response.NO_INTERNET, currentEntities)
+                    return Response.Error(Response.NO_DATA_AVAILABLE)
                 }
                 is Response.Success -> {
-                    val data = missingEntities.data!!
-                    if (filterValue != null) {
-                        storeData(data, filterValue as Int)
+                    missingData.data?.let { data ->
+                        storeData(data)
+                        missingEntities = data.map { it.toEntity() as T }
                     }
-                    return if (currentEntities.size < currentEntitiesIds.count()) {
-                        Response.Success(currentEntities + (missingEntities.data))
+                    return if (missingEntities.isNotEmpty()) {
+                        if (currentEntities.size < idsArray.size) {
+                            Response.Success(currentEntities + (missingEntities))
+                        } else {
+                            Response.Success(missingEntities)
+                        }
                     } else {
-                        Response.Success(missingEntities.data)
+                        Response.Error(Response.NO_DATA_AVAILABLE)
                     }
                 }
             }
         } else {
             return Response.Success(currentEntities)
+        }
+    }
+
+    override suspend fun refreshData(context: Context, idsString: String): Response<List<T>> {
+        val result = getDataFromInternet(context, idsString).data
+        result?.let { data ->
+            storeData(data)
+            val entities = data.map { it.toEntity() }
+            return Response.Success(entities as List<T>)
+        } ?: run {
+            return Response.Error(Response.NO_INTERNET)
         }
     }
 }
