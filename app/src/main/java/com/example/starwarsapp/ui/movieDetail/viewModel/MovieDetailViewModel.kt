@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.starwarsapp.data.local.models.*
 import com.example.starwarsapp.data.sync.interfaces.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,7 +25,8 @@ constructor(
     private val movieDataRepository: MovieDataRepository,
     private val planetDataRepository: PlanetDataRepository,
     private val specieDataRepository: SpecieDataRepository,
-    private val starshipDataRepository: StarshipDataRepository
+    private val starshipDataRepository: StarshipDataRepository,
+    private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     val selectedMovie: MutableLiveData<MovieEntity> by lazy {
@@ -56,7 +58,7 @@ constructor(
     }
 
     fun refreshList(context: Context, movie: MovieEntity, type: TypeTabs) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             var data: List<BaseEntity>? = null
             when (type) {
                 TypeTabs.CHARACTERS -> {

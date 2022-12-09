@@ -99,6 +99,7 @@ open class BaseDataManager<T : BaseEntity> (
                     }
                 }
             }
+            return Response.Error(Response.NO_INTERNET, currentEntities)
         } else {
             return Response.Success(currentEntities)
         }
