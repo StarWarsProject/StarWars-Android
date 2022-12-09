@@ -10,11 +10,11 @@ import com.example.starwarsapp.data.remote.models.Specie
 import com.example.starwarsapp.data.remote.models.Starship
 import com.example.starwarsapp.utils.Response
 
-class SwapiManager(val service: Swapi) : SwapiRepository {
+class SwapiManager(private val service: Swapi) : SwapiRepository {
     override suspend fun getAllMovies(): Response<List<IBaseRemoteData>> {
         try {
             val response = service.getMovies()
-            if (response.isSuccessful) {
+            if ((200..299).contains(response.code())) {
                 return Response.Success(response.body()?.results ?: listOf())
             }
             Log.e(Response.LOG_ERROR_TAG, response.message())
@@ -47,7 +47,7 @@ class SwapiManager(val service: Swapi) : SwapiRepository {
                     }
                 }
                 val resp = response ?: return Response.Error("Something went wrong")
-                if (resp.isSuccessful) {
+                if ((200..299).contains(resp.code())) {
                     return@map resp.body() as T
                 } else {
                     Log.e(Response.LOG_ERROR_TAG, resp.message())
