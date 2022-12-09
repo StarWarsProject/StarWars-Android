@@ -2,6 +2,7 @@ package com.example.starwarsapp.ui.home.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -53,6 +54,7 @@ class MoviePreviewFragment : Fragment() {
         binding.btnGoDetails.setOnClickListener {
             val targetMovie = viewModel.activeMovie.value ?: return@setOnClickListener
             val direction = MainScreenFragmentDirections.actionMainScreenFragmentToMovieDetailFragment(targetMovie.id)
+            Log.d("preview", targetMovie.id.toString())
             findNavController().navigate(direction)
         }
     }

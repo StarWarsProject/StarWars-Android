@@ -10,13 +10,17 @@ import com.example.starwarsapp.utils.ListUtil
 import com.example.starwarsapp.utils.Response
 import com.example.starwarsapp.utils.Utils
 
-open class BaseDataManager<T : BaseEntity> (
+open class BaseDataManager<T : BaseEntity>(
     private val baseCrudOperations: BaseEntityCrud<T>
 ) : BaseDataRepository<T> {
     companion object {
         const val LOGIDENTIFIER = "BaseDataManager"
     }
-    override suspend fun getEntitiesLocally(byPropertyName: String?, value: Any?): Response<List<T>> {
+
+    override suspend fun getEntitiesLocally(
+        byPropertyName: String?,
+        value: Any?
+    ): Response<List<T>> {
         Log.d(LOGIDENTIFIER, "from db")
         return when (val response = baseCrudOperations.getAllLocal(byPropertyName, value)) {
             is Response.Success -> {
@@ -33,7 +37,10 @@ open class BaseDataManager<T : BaseEntity> (
         }
     }
 
-    override suspend fun getDataFromInternet(context: Context, sourceStringIds: String): Response<List<IBaseRemoteData>> {
+    override suspend fun getDataFromInternet(
+        context: Context,
+        sourceStringIds: String
+    ): Response<List<IBaseRemoteData>> {
         Log.d(LOGIDENTIFIER, "from internet")
         return if (Utils.checkForInternet(context)) {
             val dataIdsList = ListUtil.joinedIdStringToArray(sourceStringIds)
@@ -62,43 +69,47 @@ open class BaseDataManager<T : BaseEntity> (
         return Response.Success(Unit)
     }
 
-    override suspend fun syncData(context: Context, idsString: String, filterPropertyName: String?, filterValue: Any?): Response<List<T>> {
+    override suspend fun syncData(
+        context: Context,
+        idsString: String,
+        filterPropertyName: String?,
+        filterValue: Any?
+    ): Response<List<T>> {
         val currentEntities = getEntitiesLocally(filterPropertyName, filterValue).data ?: listOf()
         val idsArray = ListUtil.joinedIdStringToArray(idsString)
         val entitiesIds = currentEntities.map { it.id.toString() }
         val missingIds = idsArray.minus(entitiesIds.toSet())
-        Log.d("someeee", currentEntities.size.toString())
-        Log.d("someeee", idsArray.size.toString())
-        Log.d("someeee", (currentEntities.size != idsArray.size).toString())
+        Log.d("CurrentEntities", currentEntities.size.toString())
+        Log.d("idsArray", idsArray.size.toString())
+        Log.d("filterValue", filterValue.toString())
         if (currentEntities.size != idsArray.size || missingIds.isNotEmpty()) {
             val targetIds = if (currentEntities.size < idsArray.size) {
                 missingIds.joinToString("@")
             } else {
                 val outdatedIds = entitiesIds.minus(idsArray.toSet())
                 outdatedIds.forEach {
-                    baseCrudOperations.removeRelationWithParent(it.toInt(), filterValue.toString().toInt())
+                    baseCrudOperations.removeRelationWithParent(
+                        it.toInt(),
+                        filterValue.toString().toInt()
+                    )
                 }
                 idsArray.joinToString("@")
             }
             var missingEntities = listOf<T>()
             val missingData = getDataFromInternet(context, targetIds)
-            when (missingData) {
-                is Response.Error -> {
-                    return Response.Error(Response.NO_DATA_AVAILABLE)
+            missingData.data?.let { data ->
+                storeData(data)
+                missingEntities = data.map { it.toEntity() as T }
+            }
+            return when (missingEntities.size) {
+                0 -> {
+                    Response.Error(Response.NO_INTERNET, currentEntities)
                 }
-                is Response.Success -> {
-                    missingData.data?.let { data ->
-                        storeData(data)
-                        missingEntities = data.map { it.toEntity() as T }
-                    }
-                    return if (missingEntities.isNotEmpty()) {
-                        if (currentEntities.size < idsArray.size) {
-                            Response.Success(currentEntities + (missingEntities))
-                        } else {
-                            Response.Success(missingEntities)
-                        }
+                else -> {
+                    if (currentEntities.size < idsArray.size) {
+                        Response.Success(currentEntities + (missingEntities))
                     } else {
-                        Response.Error(Response.NO_DATA_AVAILABLE)
+                        Response.Success(missingEntities)
                     }
                 }
             }

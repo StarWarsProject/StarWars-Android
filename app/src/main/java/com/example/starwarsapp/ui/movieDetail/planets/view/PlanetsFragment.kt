@@ -31,6 +31,7 @@ class PlanetsFragment : Fragment() {
         binding.planetsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.planetsRecycler.adapter = PlanetAdapter(listOf())
         binding.tvNotSynced.visibility = View.GONE
+        binding.errorContainer.container.visibility = View.GONE
         binding.refreshContainer.setOnRefreshListener {
             viewModel.selectedMovie.value?.let {
                 viewModel.refreshList(binding.root.context, it, TypeTabs.PLANETS)
@@ -51,11 +52,14 @@ class PlanetsFragment : Fragment() {
         }
         viewModel.planetsList.observe(viewLifecycleOwner) { list ->
             if (list.isEmpty()) {
+//                binding.progressBar.visibility = View.GONE
                 binding.errorContainer.container.visibility = View.VISIBLE
             } else {
-                binding.progressBar.visibility = View.GONE
+//                binding.progressBar.visibility = View.GONE
                 binding.errorContainer.container.visibility = View.GONE
             }
+
+            binding.progressBar.visibility = View.GONE
             (binding.planetsRecycler.adapter as PlanetAdapter).updateList(list)
             binding.refreshContainer.isRefreshing = false
         }
