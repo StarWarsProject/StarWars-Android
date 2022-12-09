@@ -37,13 +37,15 @@ class MovieDetailViewModelTest : TestCase() {
     public override fun setUp() = runTest {
         super.setUp()
         hiltRule.inject()
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
+        val testDispatcherIO = UnconfinedTestDispatcher(testScheduler)
+        val testDispatcherMain = UnconfinedTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcherMain)
         fakeCharacterDataManager = FakeCharacterDataManager()
         fakeMovieDataManager = FakeMovieDataManager()
         fakePlanetDataManager = FakePlanetDataManager()
         fakeSpecieDataManager = FakeSpecieDataManager()
         fakeStarshipDataManager = FakeStarshipDataManager()
-        viewModel = MovieDetailViewModel(fakeCharacterDataManager, fakeMovieDataManager, fakePlanetDataManager, fakeSpecieDataManager, fakeStarshipDataManager, testDispatcher)
+        viewModel = MovieDetailViewModel(fakeCharacterDataManager, fakeMovieDataManager, fakePlanetDataManager, fakeSpecieDataManager, fakeStarshipDataManager, testDispatcherIO, testDispatcherMain)
         context = InstrumentationRegistry.getInstrumentation().context
     }
 
@@ -55,8 +57,6 @@ class MovieDetailViewModelTest : TestCase() {
 
     @Test
     fun `When refresh Character tab it gets the data from internet and save it, then sets the charactersList with the result`() = runTest {
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
         try {
             viewModel.refreshList(context, FakeData.movie1, TypeTabs.CHARACTERS)
             assertEquals(FakeData.characters, viewModel.charactersList.value)
@@ -67,8 +67,6 @@ class MovieDetailViewModelTest : TestCase() {
 
     @Test
     fun `When refresh Planet tab it gets the data from internet and save it, then sets the planetsList with the result`() = runTest {
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
         try {
             viewModel.refreshList(context, FakeData.movie1, TypeTabs.PLANETS)
             assertEquals(FakeData.planets, viewModel.planetsList.value)
@@ -79,8 +77,6 @@ class MovieDetailViewModelTest : TestCase() {
 
     @Test
     fun `When refresh Specie tab it gets the data from internet and save it, then sets the speciesList with the result`() = runTest {
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
         try {
             viewModel.refreshList(context, FakeData.movie1, TypeTabs.SPECIES)
             assertEquals(FakeData.species, viewModel.speciesList.value)
@@ -91,8 +87,6 @@ class MovieDetailViewModelTest : TestCase() {
 
     @Test
     fun `When refresh Starship tab it gets the data from internet and save it, then sets the starshipsList with the result`() = runTest {
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
         try {
             viewModel.refreshList(context, FakeData.movie1, TypeTabs.SHIPS)
             assertEquals(FakeData.starships, viewModel.starshipsList.value)
