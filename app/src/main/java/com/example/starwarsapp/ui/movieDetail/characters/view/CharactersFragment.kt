@@ -31,6 +31,7 @@ class CharactersFragment : Fragment() {
         binding.charactersRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.charactersRecycler.adapter = CharacterAdapter(listOf())
         binding.tvNotSynced.visibility = View.GONE
+        binding.errorContainer.container.visibility = View.GONE
         binding.refreshContainer.setOnRefreshListener {
             viewModel.selectedMovie.value?.let {
                 viewModel.refreshList(binding.root.context, it, TypeTabs.CHARACTERS)
@@ -53,9 +54,9 @@ class CharactersFragment : Fragment() {
             if (list.isEmpty()) {
                 binding.errorContainer.container.visibility = View.VISIBLE
             } else {
-                binding.progressBar.visibility = View.GONE
                 binding.errorContainer.container.visibility = View.GONE
             }
+            binding.progressBar.visibility = View.GONE
             (binding.charactersRecycler.adapter as CharacterAdapter).updateList(list)
             binding.refreshContainer.isRefreshing = false
         }
