@@ -1,6 +1,5 @@
 package com.example.starwarsapp.data.source
 
-import com.example.starwarsapp.StarWarsApplication
 import com.example.starwarsapp.data.remote.interfaces.IBaseRemoteData
 import com.example.starwarsapp.data.remote.interfaces.SwapiRepository
 import com.example.starwarsapp.utils.JsonReader
@@ -8,11 +7,13 @@ import com.example.starwarsapp.utils.Response
 
 class FakeSwapiRepository : SwapiRepository {
     override suspend fun getAllMovies(): Response<List<IBaseRemoteData>> {
-        return try {
-            val a = JsonReader(StarWarsApplication.context!!)
-            Response.Success(a.read())
+        try {
+            JsonReader.read()?.let {
+                return Response.Success(it)
+            }
+            return Response.Error("file not found")
         } catch (e: Exception) {
-            Response.Error(e.toString())
+            return Response.Error(e.toString())
         }
     }
 
