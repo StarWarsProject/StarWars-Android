@@ -1,6 +1,7 @@
 package com.example.starwarsapp.ui.movieDetail.viewModel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -59,6 +60,7 @@ constructor(
 
     fun refreshList(context: Context, movie: MovieEntity, type: TypeTabs) =
         viewModelScope.launch(dispatcher) {
+            Log.d("viewmode", "refreshing")
             var data: List<BaseEntity>? = null
             when (type) {
                 TypeTabs.CHARACTERS -> {
@@ -109,14 +111,17 @@ constructor(
         var messageError: String? = null
         when (type) {
             TypeTabs.CHARACTERS -> {
+                Log.d("viewmodel", "chars")
                 val result =
                     characterDataRepository.syncData(context, movie.characters, "movie", movie.id)
                 result.data?.let {
+                    Log.d("viewmodelchars", it.count().toString())
                     charactersList.value = it
                 }
                 messageError = result.message
             }
             TypeTabs.PLANETS -> {
+                Log.d("viewmodel", "planets")
                 val result =
                     planetDataRepository.syncData(context, movie.planets, "movie", movie.id)
                 result.data?.let {
@@ -125,6 +130,7 @@ constructor(
                 messageError = result.message
             }
             TypeTabs.SPECIES -> {
+                Log.d("viewmodel", "species")
                 val result =
                     specieDataRepository.syncData(context, movie.species, "movie", movie.id)
                 result.data?.let {
@@ -133,6 +139,7 @@ constructor(
                 messageError = result.message
             }
             TypeTabs.SHIPS -> {
+                Log.d("viewmodel", "ships")
                 val result =
                     starshipDataRepository.syncData(context, movie.starships, "movie", movie.id)
                 result.data?.let {

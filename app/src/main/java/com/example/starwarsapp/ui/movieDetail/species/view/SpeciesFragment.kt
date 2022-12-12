@@ -32,6 +32,7 @@ class SpeciesFragment : Fragment() {
         binding.speciesRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.speciesRecycler.adapter = SpecieAdapter(listOf())
         binding.tvNotSynced.visibility = View.GONE
+        binding.errorContainer.container.visibility = View.GONE
         binding.refreshContainer.setOnRefreshListener {
             viewModel.selectedMovie.value?.let {
                 viewModel.refreshList(binding.root.context, it, TypeTabs.SPECIES)
