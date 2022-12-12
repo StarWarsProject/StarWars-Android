@@ -52,10 +52,8 @@ class PlanetsFragment : Fragment() {
         }
         viewModel.planetsList.observe(viewLifecycleOwner) { list ->
             if (list.isEmpty()) {
-//                binding.progressBar.visibility = View.GONE
                 binding.errorContainer.container.visibility = View.VISIBLE
             } else {
-//                binding.progressBar.visibility = View.GONE
                 binding.errorContainer.container.visibility = View.GONE
             }
 
