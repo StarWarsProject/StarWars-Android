@@ -21,7 +21,7 @@ class FakePlanetDataManager : PlanetDataRepository {
                 return Response.Success(it)
             }
         } else {
-            return Response.Success(listOf())
+            return Response.Error("Something went wrong")
         }
         return Response.Success(listOf())
     }
@@ -44,7 +44,7 @@ class FakePlanetDataManager : PlanetDataRepository {
                 }
             }
         } else {
-            return Response.Success(listOf())
+            return Response.Error("Something went wrong")
         }
         return Response.Success(listOf())
     }
@@ -63,7 +63,7 @@ class FakePlanetDataManager : PlanetDataRepository {
                 }
             }
         } else {
-            return Response.Success(listOf())
+            return Response.Error("Something went wrong")
         }
         return Response.Success(listOf())
     }
