@@ -1,6 +1,7 @@
 package com.example.starwarsapp
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Resources
 import com.example.starwarsapp.data.local.db.StarWarsDB
 import dagger.hilt.android.HiltAndroidApp
@@ -11,11 +12,13 @@ class StarWarsApplication : Application() {
         super.onCreate()
         starWarsDB = StarWarsDB.create(this)
         res = resources
+        context = applicationContext
     }
 
     companion object {
         var starWarsDB: StarWarsDB? = null
         var res: Resources? = null
+        var context: Context? = null
 
         fun getResources(): Resources? {
             return res
