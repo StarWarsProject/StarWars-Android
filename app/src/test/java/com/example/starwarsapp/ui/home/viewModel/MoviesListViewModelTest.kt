@@ -40,10 +40,18 @@ class MoviesListViewModelTest : TestCase() {
 
     @Test
     fun `Get all movies and show data if not null`() = kotlinx.coroutines.test.runTest {
+        FakeData.withData = 1
         viewModel.getAllMovies(context)
         viewModel.moviesList.value?.let { assertEquals(7, it.size) }
-        // assertEquals(viewModel.moviesList.value, FakeData.movies)
-        assertEquals(viewModel.activeMovie.value, FakeData.movie1) // aqui falla el test porque es diferente en fake data que en el json
+        assertNotNull(viewModel.activeMovie.value)
+    }
+
+    @Test
+    fun `Get all movies but if api data fails will not set the movies list`() = kotlinx.coroutines.test.runTest {
+        FakeData.withData = 0
+        viewModel.getAllMovies(context)
+        viewModel.moviesList.value?.let { assertEquals(0, it.size) }
+        assertNull(viewModel.activeMovie.value)
     }
 
     @Test

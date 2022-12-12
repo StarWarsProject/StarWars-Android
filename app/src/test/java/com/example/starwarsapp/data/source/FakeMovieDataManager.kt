@@ -18,7 +18,6 @@ class FakeMovieDataManager : MovieDataRepository {
         } else {
             Response.Error(Response.NO_DATA_AVAILABLE)
         }
-        // return Response.Success(FakeData.movies)
     }
 
     override suspend fun storeAllMovies(moviesList: List<MovieEntity>): Response<Unit> {

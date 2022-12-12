@@ -12,6 +12,7 @@ object FakeData {
     var movie2 = MovieEntity(2, 2, "A new Hope", "", "", ", ", "", "1980-05-17", "", "", "", "", 10000, 10000)
     val movies = listOf(movie1, movie2)
     val newMoviesList = mutableListOf<MovieEntity>(movie1, movie2)
+    var withData = 0
 
     private val character1 = CharacterEntity(1, "Luke Skywalker", "", "", "", "", "", "", "", 10000, 10000)
     private val character2 = CharacterEntity(2, "R2-D2", "", "", "", "", "", "", "", 10000, 10000)
