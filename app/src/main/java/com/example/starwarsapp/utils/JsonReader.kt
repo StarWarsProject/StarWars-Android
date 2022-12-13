@@ -14,6 +14,14 @@ class JsonReader {
             }
             return null
         }
+        fun readMoviesError(): List<Movie>? {
+            val fileContent = this::class.java.classLoader?.getResource("movieserror.json")?.readText()
+            fileContent?.let {
+                val objectConverted: MovieResponse = Gson().fromJson(it, object : TypeToken<MovieResponse>() {}.type)
+                return objectConverted.results
+            }
+            return null
+        }
         fun readCharacter(): List<People>? {
             val fileContent = this::class.java.classLoader?.getResource("people.json")?.readText()
             fileContent?.let {

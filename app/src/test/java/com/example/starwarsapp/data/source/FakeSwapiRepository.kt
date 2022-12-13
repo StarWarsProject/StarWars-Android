@@ -12,8 +12,12 @@ import com.example.starwarsapp.utils.Response
 class FakeSwapiRepository : SwapiRepository {
     override suspend fun getAllMovies(): Response<List<IBaseRemoteData>> {
         try {
-            if (FakeData.withData == 1) {
+            if (!FakeData.withErrorData) {
                 JsonReader.readMovies()?.let {
+                    return Response.Success(it)
+                }
+            } else {
+                JsonReader.readMoviesError()?.let {
                     return Response.Success(it)
                 }
             }
@@ -29,23 +33,39 @@ class FakeSwapiRepository : SwapiRepository {
     ): Response<List<IBaseRemoteData>> {
         when (type) {
             People::class.java -> {
-                JsonReader.readCharacter()?.let {
-                    return Response.Success(it)
+                if (!FakeData.withErrorData) {
+                    JsonReader.readCharacter()?.let {
+                        return Response.Success(it)
+                    }
+                } else {
+                    return Response.Error("Something went wrong")
                 }
             }
             Planet::class.java -> {
-                JsonReader.readPlanet()?.let {
-                    return Response.Success(it)
+                if (!FakeData.withErrorData) {
+                    JsonReader.readPlanet()?.let {
+                        return Response.Success(it)
+                    }
+                } else {
+                    return Response.Error("Something went wrong")
                 }
             }
             Specie::class.java -> {
-                JsonReader.readSpecie()?.let {
-                    return Response.Success(it)
+                if (!FakeData.withErrorData) {
+                    JsonReader.readSpecie()?.let {
+                        return Response.Success(it)
+                    }
+                } else {
+                    return Response.Error("Something went wrong")
                 }
             }
             Starship::class.java -> {
-                JsonReader.readStarShip()?.let {
-                    return Response.Success(it)
+                if (!FakeData.withErrorData) {
+                    JsonReader.readStarShip()?.let {
+                        return Response.Success(it)
+                    }
+                } else {
+                    return Response.Error("Something went wrong")
                 }
             }
         }

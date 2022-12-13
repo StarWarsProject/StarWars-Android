@@ -40,7 +40,7 @@ class MoviesListViewModelTest : TestCase() {
 
     @Test
     fun `Get all movies and show data if not null`() = kotlinx.coroutines.test.runTest {
-        FakeData.withData = 1
+        FakeData.withErrorData = false
         viewModel.getAllMovies(context)
         viewModel.moviesList.value?.let { assertEquals(7, it.size) }
         assertNotNull(viewModel.activeMovie.value)
@@ -48,7 +48,7 @@ class MoviesListViewModelTest : TestCase() {
 
     @Test
     fun `Get all movies but if api data fails will not set the movies list`() = kotlinx.coroutines.test.runTest {
-        FakeData.withData = 0
+        FakeData.withErrorData = true
         viewModel.getAllMovies(context)
         viewModel.moviesList.value?.let { assertEquals(0, it.size) }
         assertNull(viewModel.activeMovie.value)

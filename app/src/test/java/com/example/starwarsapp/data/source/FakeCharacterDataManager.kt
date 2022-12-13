@@ -9,21 +9,37 @@ import com.example.starwarsapp.utils.Response
 
 class FakeCharacterDataManager : CharacterDataRepository {
     override suspend fun getEntitiesLocally(byPropertyName: String?, value: Any?): Response<List<CharacterEntity>> {
-        return Response.Success(FakeData.characters)
+        val fake = FakeSwapiRepository()
+        val sourceArray = listOf("ids")
+        val remoteDataResponse = fake.getEntitiesForMovie(sourceArray, People::class.java)
+        val data = remoteDataResponse.data
+        if (data != null && data.isNotEmpty()) {
+            data.let {
+                it.map {
+                    val data = listOf(it.toEntity())
+                    data.let {
+                        return Response.Success(it as List<CharacterEntity>)
+                    }
+                }
+            }
+        } else {
+            return Response.Error("Something went wrong")
+        }
+        return Response.Success(listOf())
     }
 
     override suspend fun getDataFromInternet(context: Context, sourceStringIds: String): Response<List<IBaseRemoteData>> {
         val fake = FakeSwapiRepository()
         val sourceArray = listOf("ids")
         val remoteDataResponse = fake.getEntitiesForMovie(sourceArray, People::class.java)
-        if (FakeData.withData == 1) {
-            remoteDataResponse.data?.let {
+        val data = remoteDataResponse.data
+        if (data != null && data.isNotEmpty()) {
+            data.let {
                 return Response.Success(it)
             }
         } else {
             return Response.Error("Something went wrong")
         }
-        return Response.Success(listOf())
     }
 
     override suspend fun storeData(dataList: List<IBaseRemoteData>): Response<Unit> {
@@ -34,8 +50,9 @@ class FakeCharacterDataManager : CharacterDataRepository {
         val fake = FakeSwapiRepository()
         val sourceArray = listOf("ids")
         val remoteDataResponse = fake.getEntitiesForMovie(sourceArray, People::class.java)
-        if (FakeData.withData == 1) {
-            remoteDataResponse.data?.let {
+        val data = remoteDataResponse.data
+        if (data != null && data.isNotEmpty()) {
+            data.let {
                 it.map {
                     val data = listOf(it.toEntity())
                     data.let {
@@ -53,8 +70,9 @@ class FakeCharacterDataManager : CharacterDataRepository {
         val fake = FakeSwapiRepository()
         val sourceArray = listOf("ids")
         val remoteDataResponse = fake.getEntitiesForMovie(sourceArray, People::class.java)
-        if (FakeData.withData == 1) {
-            remoteDataResponse.data?.let {
+        val data = remoteDataResponse.data
+        if (data != null && data.isNotEmpty()) {
+            data.let {
                 it.map {
                     val data = listOf(it.toEntity())
                     data.let {

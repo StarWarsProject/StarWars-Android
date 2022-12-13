@@ -10,7 +10,7 @@ class FakeMovieDataManager : MovieDataRepository {
         val fake = FakeSwapiRepository()
         val apiDataMovies = fake.getAllMovies()
         val data = apiDataMovies.data
-        return if (data != null) {
+        return if (data != null && data.isNotEmpty()) {
             val entityList = data.map {
                 it.toEntity() as MovieEntity
             }

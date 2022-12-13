@@ -9,15 +9,32 @@ import com.example.starwarsapp.utils.Response
 
 class FakeSpecieDataManager : SpecieDataRepository {
     override suspend fun getEntitiesLocally(byPropertyName: String?, value: Any?): Response<List<SpecieEntity>> {
-        return Response.Success(FakeData.species)
+        val fake = FakeSwapiRepository()
+        val sourceArray = listOf("ids")
+        val remoteDataResponse = fake.getEntitiesForMovie(sourceArray, Specie::class.java)
+        val data = remoteDataResponse.data
+        if (data != null && data.isNotEmpty()) {
+            data.let {
+                it.map {
+                    val data = listOf(it.toEntity())
+                    data.let {
+                        return Response.Success(it as List<SpecieEntity>)
+                    }
+                }
+            }
+        } else {
+            return Response.Error("Something went wrong")
+        }
+        return Response.Success(listOf())
     }
 
     override suspend fun getDataFromInternet(context: Context, sourceStringIds: String): Response<List<IBaseRemoteData>> {
         val fake = FakeSwapiRepository()
         val sourceArray = listOf("ids")
         val remoteDataResponse = fake.getEntitiesForMovie(sourceArray, Specie::class.java)
-        if (FakeData.withData == 1) {
-            remoteDataResponse.data?.let {
+        val data = remoteDataResponse.data
+        if (data != null && data.isNotEmpty()) {
+            data.let {
                 return Response.Success(it)
             }
         } else {
@@ -34,8 +51,9 @@ class FakeSpecieDataManager : SpecieDataRepository {
         val fake = FakeSwapiRepository()
         val sourceArray = listOf("ids")
         val remoteDataResponse = fake.getEntitiesForMovie(sourceArray, Specie::class.java)
-        if (FakeData.withData == 1) {
-            remoteDataResponse.data?.let {
+        val data = remoteDataResponse.data
+        if (data != null && data.isNotEmpty()) {
+            data.let {
                 it.map {
                     val data = listOf(it.toEntity())
                     data.let {
@@ -53,8 +71,9 @@ class FakeSpecieDataManager : SpecieDataRepository {
         val fake = FakeSwapiRepository()
         val sourceArray = listOf("ids")
         val remoteDataResponse = fake.getEntitiesForMovie(sourceArray, Specie::class.java)
-        if (FakeData.withData == 1) {
-            remoteDataResponse.data?.let {
+        val data = remoteDataResponse.data
+        if (data != null && data.isNotEmpty()) {
+            data.let {
                 it.map {
                     val data = listOf(it.toEntity())
                     data.let {
