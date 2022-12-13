@@ -7,9 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.starwarsapp.data.local.models.*
 import com.example.starwarsapp.data.sync.interfaces.*
+import com.example.starwarsapp.di.IoDispatcher
+import com.example.starwarsapp.di.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -27,7 +28,8 @@ constructor(
     private val planetDataRepository: PlanetDataRepository,
     private val specieDataRepository: SpecieDataRepository,
     private val starshipDataRepository: StarshipDataRepository,
-    private val dispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     val selectedMovie: MutableLiveData<MovieEntity> by lazy {
@@ -59,7 +61,7 @@ constructor(
     }
 
     fun refreshList(context: Context, movie: MovieEntity, type: TypeTabs) =
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch(ioDispatcher) {
             Log.d("viewmode", "refreshing")
             var data: List<BaseEntity>? = null
             when (type) {
@@ -67,7 +69,7 @@ constructor(
                     data =
                         characterDataRepository.refreshData(context, movie.characters).data
                     data?.let {
-                        withContext(Dispatchers.Main) {
+                        withContext(mainDispatcher) {
                             charactersList.value = it
                         }
                     }
@@ -75,7 +77,7 @@ constructor(
                 TypeTabs.PLANETS -> {
                     data = planetDataRepository.refreshData(context, movie.planets).data
                     data?.let {
-                        withContext(Dispatchers.Main) {
+                        withContext(mainDispatcher) {
                             planetsList.value = it
                         }
                     }
@@ -83,7 +85,7 @@ constructor(
                 TypeTabs.SPECIES -> {
                     data = specieDataRepository.refreshData(context, movie.species).data
                     data?.let {
-                        withContext(Dispatchers.Main) {
+                        withContext(mainDispatcher) {
                             speciesList.value = it
                         }
                     }
@@ -91,13 +93,13 @@ constructor(
                 TypeTabs.SHIPS -> {
                     data = starshipDataRepository.refreshData(context, movie.starships).data
                     data?.let {
-                        withContext(Dispatchers.Main) {
+                        withContext(mainDispatcher) {
                             starshipsList.value = it
                         }
                     }
                 }
             }
-            withContext(Dispatchers.Main) {
+            withContext(mainDispatcher) {
                 data?.let {
                     syncError.value = false
                     syncList(context, movie, type)

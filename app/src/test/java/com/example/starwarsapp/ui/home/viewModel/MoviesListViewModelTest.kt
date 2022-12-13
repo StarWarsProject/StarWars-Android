@@ -12,10 +12,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import org.junit.jupiter.api.Assertions.*
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
@@ -40,9 +40,18 @@ class MoviesListViewModelTest : TestCase() {
 
     @Test
     fun `Get all movies and show data if not null`() = kotlinx.coroutines.test.runTest {
+        FakeData.withErrorData = false
         viewModel.getAllMovies(context)
-        assertEquals(viewModel.moviesList.value, FakeData.movies)
-        assertEquals(viewModel.activeMovie.value, FakeData.movie1)
+        viewModel.moviesList.value?.let { assertEquals(7, it.size) }
+        assertNotNull(viewModel.activeMovie.value)
+    }
+
+    @Test
+    fun `Get all movies but if api data fails will not set the movies list`() = kotlinx.coroutines.test.runTest {
+        FakeData.withErrorData = true
+        viewModel.getAllMovies(context)
+        viewModel.moviesList.value?.let { assertEquals(0, it.size) }
+        assertNull(viewModel.activeMovie.value)
     }
 
     @Test

@@ -7,7 +7,17 @@ import com.example.starwarsapp.utils.Response
 
 class FakeMovieDataManager : MovieDataRepository {
     override suspend fun getAllMovies(context: Context): Response<List<MovieEntity>> {
-        return Response.Success(FakeData.movies)
+        val fake = FakeSwapiRepository()
+        val apiDataMovies = fake.getAllMovies()
+        val data = apiDataMovies.data
+        return if (data != null && data.isNotEmpty()) {
+            val entityList = data.map {
+                it.toEntity() as MovieEntity
+            }
+            Response.Success(entityList)
+        } else {
+            Response.Error(Response.NO_DATA_AVAILABLE)
+        }
     }
 
     override suspend fun storeAllMovies(moviesList: List<MovieEntity>): Response<Unit> {

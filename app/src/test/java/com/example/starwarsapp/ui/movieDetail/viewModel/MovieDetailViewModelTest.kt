@@ -37,13 +37,15 @@ class MovieDetailViewModelTest : TestCase() {
     public override fun setUp() = runTest {
         super.setUp()
         hiltRule.inject()
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
+        val testDispatcherIO = UnconfinedTestDispatcher(testScheduler)
+        val testDispatcherMain = UnconfinedTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcherMain)
         fakeCharacterDataManager = FakeCharacterDataManager()
         fakeMovieDataManager = FakeMovieDataManager()
         fakePlanetDataManager = FakePlanetDataManager()
         fakeSpecieDataManager = FakeSpecieDataManager()
         fakeStarshipDataManager = FakeStarshipDataManager()
-        viewModel = MovieDetailViewModel(fakeCharacterDataManager, fakeMovieDataManager, fakePlanetDataManager, fakeSpecieDataManager, fakeStarshipDataManager, testDispatcher)
+        viewModel = MovieDetailViewModel(fakeCharacterDataManager, fakeMovieDataManager, fakePlanetDataManager, fakeSpecieDataManager, fakeStarshipDataManager, testDispatcherIO, testDispatcherMain)
         context = InstrumentationRegistry.getInstrumentation().context
     }
 
@@ -54,74 +56,145 @@ class MovieDetailViewModelTest : TestCase() {
     }
 
     @Test
-    fun `When refresh Character tab it gets the data from internet and save it, then sets the charactersList with the result`() = runTest {
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
+    fun `When refresh Character tab it gets the data from internet and save it, then sets the charactersList with the result (SUCCESS RESULT)`() = runTest {
         try {
+            FakeData.withErrorData = false
             viewModel.refreshList(context, FakeData.movie1, TypeTabs.CHARACTERS)
-            assertEquals(FakeData.characters, viewModel.charactersList.value)
+            viewModel.charactersList.value?.let { assertEquals(1, it.size) }
         } finally {
             Dispatchers.resetMain()
         }
     }
 
     @Test
-    fun `When refresh Planet tab it gets the data from internet and save it, then sets the planetsList with the result`() = runTest {
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
+    fun `When refresh Character tab it gets the data from internet and save it, then sets the charactersList with the result (FAILURE RESULT)`() = runTest {
         try {
+            FakeData.withErrorData = true
+            viewModel.refreshList(context, FakeData.movie1, TypeTabs.CHARACTERS)
+            viewModel.charactersList.value?.let { assertEquals(0, it.size) }
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun `When refresh Planet tab it gets the data from internet and save it, then sets the planetsList with the result (SUCCESS RESULT)`() = runTest {
+        try {
+            FakeData.withErrorData = false
             viewModel.refreshList(context, FakeData.movie1, TypeTabs.PLANETS)
-            assertEquals(FakeData.planets, viewModel.planetsList.value)
+            viewModel.planetsList.value?.let { assertEquals(1, it.size) }
         } finally {
             Dispatchers.resetMain()
         }
     }
 
     @Test
-    fun `When refresh Specie tab it gets the data from internet and save it, then sets the speciesList with the result`() = runTest {
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
+    fun `When refresh Planet tab it gets the data from internet and save it, then sets the planetsList with the result (FAILURE RESULT)`() = runTest {
         try {
+            FakeData.withErrorData = true
+            viewModel.refreshList(context, FakeData.movie1, TypeTabs.PLANETS)
+            viewModel.charactersList.value?.let { assertEquals(0, it.size) }
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun `When refresh Specie tab it gets the data from internet and save it, then sets the speciesList with the result (SUCCESS RESULT)`() = runTest {
+        try {
+            FakeData.withErrorData = false
             viewModel.refreshList(context, FakeData.movie1, TypeTabs.SPECIES)
-            assertEquals(FakeData.species, viewModel.speciesList.value)
+            viewModel.speciesList.value?.let { assertEquals(1, it.size) }
         } finally {
             Dispatchers.resetMain()
         }
     }
 
     @Test
-    fun `When refresh Starship tab it gets the data from internet and save it, then sets the starshipsList with the result`() = runTest {
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
+    fun `When refresh Specie tab it gets the data from internet and save it, then sets the speciesList with the result (FAILURE RESULT)`() = runTest {
         try {
-            viewModel.refreshList(context, FakeData.movie1, TypeTabs.SHIPS)
-            assertEquals(FakeData.starships, viewModel.starshipsList.value)
+            FakeData.withErrorData = true
+            viewModel.refreshList(context, FakeData.movie1, TypeTabs.SPECIES)
+            viewModel.speciesList.value?.let { assertEquals(0, it.size) }
         } finally {
             Dispatchers.resetMain()
         }
     }
 
     @Test
-    fun `When sync Character tab it gets the data locally and sets the charactersList with the result`() {
+    fun `When refresh Starship tab it gets the data from internet and save it, then sets the starshipsList with the result (SUCCESS RESULT)`() = runTest {
+        try {
+            FakeData.withErrorData = false
+            viewModel.refreshList(context, FakeData.movie1, TypeTabs.SHIPS)
+            viewModel.starshipsList.value?.let { assertEquals(1, it.size) }
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun `When refresh Starship tab it gets the data from internet and save it, then sets the starshipsList with the result (FAILURE RESULT)`() = runTest {
+        try {
+            FakeData.withErrorData = true
+            viewModel.refreshList(context, FakeData.movie1, TypeTabs.SHIPS)
+            viewModel.starshipsList.value?.let { assertEquals(0, it.size) }
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun `When sync Character tab it gets the data locally and sets the charactersList with the result (SUCCESS RESULT)`() {
+        FakeData.withErrorData = false
         viewModel.syncList(context, FakeData.movie1, TypeTabs.CHARACTERS)
-        assertEquals(viewModel.charactersList.value, FakeData.characters)
+        viewModel.charactersList.value?.let { assertEquals(1, it.size) }
     }
 
     @Test
-    fun `When sync Planet tab it gets the data locally and sets the planetsList with the result`() {
+    fun `When sync Character tab it gets the data locally and sets the charactersList with the result (FAILURE RESULT)`() {
+        FakeData.withErrorData = true
+        viewModel.syncList(context, FakeData.movie1, TypeTabs.CHARACTERS)
+        viewModel.charactersList.value?.let { assertEquals(0, it.size) }
+    }
+
+    @Test
+    fun `When sync Planet tab it gets the data locally and sets the planetsList with the result (SUCCESS RESULT)`() {
+        FakeData.withErrorData = false
         viewModel.syncList(context, FakeData.movie1, TypeTabs.PLANETS)
-        assertEquals(viewModel.planetsList.value, FakeData.planets)
+        viewModel.planetsList.value?.let { assertEquals(1, it.size) }
+    }
+
+    fun `When sync Planet tab it gets the data locally and sets the planetsList with the result (FAILURE RESULT)`() {
+        FakeData.withErrorData = true
+        viewModel.syncList(context, FakeData.movie1, TypeTabs.PLANETS)
+        viewModel.planetsList.value?.let { assertEquals(0, it.size) }
     }
 
     @Test
-    fun `When sync Specie tab it gets the data locally and sets the speciesList with the result`() {
+    fun `When sync Specie tab it gets the data locally and sets the speciesList with the result (SUCCESS RESULT)`() {
+        FakeData.withErrorData = false
         viewModel.syncList(context, FakeData.movie1, TypeTabs.SPECIES)
-        assertEquals(viewModel.speciesList.value, FakeData.species)
+        viewModel.speciesList.value?.let { assertEquals(1, it.size) }
     }
 
     @Test
-    fun `When sync StarShips tab it gets the data locally and sets the starshipsList with the result`() {
+    fun `When sync Specie tab it gets the data locally and sets the speciesList with the result (FAILURE RESULT)`() {
+        FakeData.withErrorData = true
+        viewModel.syncList(context, FakeData.movie1, TypeTabs.SPECIES)
+        viewModel.speciesList.value?.let { assertEquals(0, it.size) }
+    }
+
+    @Test
+    fun `When sync StarShips tab it gets the data locally and sets the starshipsList with the result (SUCCESS RESULT)`() {
+        FakeData.withErrorData = false
         viewModel.syncList(context, FakeData.movie1, TypeTabs.SHIPS)
-        assertEquals(viewModel.starshipsList.value, FakeData.starships)
+        viewModel.starshipsList.value?.let { assertEquals(1, it.size) }
+    }
+
+    @Test
+    fun `When sync StarShips tab it gets the data locally and sets the starshipsList with the result (FAILURE RESULT)`() {
+        FakeData.withErrorData = true
+        viewModel.syncList(context, FakeData.movie1, TypeTabs.SHIPS)
+        viewModel.starshipsList.value?.let { assertEquals(0, it.size) }
     }
 }
